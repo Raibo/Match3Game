@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8f08d8c603e952b40a3c572023b60962, type: 3}
+  m_Name: GameConfig
+  m_EditorClassIdentifier: 
+  Width: 10
+  Height: 10
+  TileWidth: 100
+  TileHeight: 100
+  DefaultTilePrefab: {fileID: 502437906481759371, guid: b631dccdff44d2d42bbac85e9b497990, type: 3}
+  GeneratorTilePrefab: {fileID: 502437906481759371, guid: b631dccdff44d2d42bbac85e9b497990, type: 3}
+  BlockedTilePrefab: {fileID: 502437906481759371, guid: b631dccdff44d2d42bbac85e9b497990, type: 3}
+  TokenDefinitions: []
+  BlockedTiles: []
