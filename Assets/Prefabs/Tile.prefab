@@ -89,7 +89,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a11e3f348cee8d746bd7a452cfebaab9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Token: {fileID: 0}
   Position: {x: 0, y: 0}
+  RectTransform: {fileID: 502437906481759370}
   IsGenerator: 0
   IsBlocked: 0
   CanAcceptDiagonal: 0

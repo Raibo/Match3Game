@@ -17,7 +17,7 @@ namespace Hudossay.Match3.Assets.Scripts
         private TaskCompletionSource<bool> _taskSource;
 
         private const float ProximityThreshold = 0.01f;
-        private const float Speed = 300f;
+        private const float Speed = 700f;
 
 
         private void Awake()

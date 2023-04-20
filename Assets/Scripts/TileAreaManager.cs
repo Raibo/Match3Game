@@ -11,7 +11,8 @@ namespace Hudossay.Match3.Assets.Scripts
         public GameConfig GameConfig;
 
         private TileManager[,] _tileManagers;
-        private List<RectTransform> _generators;
+        private List<TileManager> _generators;
+        private List<TileManager> _diagonalTiles;
         private Task[] _waitBuffer;
 
         private readonly Vector2 _generatedTokenDisplacement = new(0f, 200f);
@@ -22,18 +23,22 @@ namespace Hudossay.Match3.Assets.Scripts
         [SerializeField] private RectTransform _parentRectTransform;
         [SerializeField] private ObjectPool _pool;
 
+        private const int GenerationDelayMilliseconds = 300;
 
-        private void Start()
+
+        private async void Start()
         {
+            RescaleArea();
             Init();
-            RefillTokens();
+            FillWithTokens();
         }
 
-        public void Init()
+        private void Init()
         {
             _tileManagers = new TileManager[GameConfig.Width, GameConfig.Height];
             _waitBuffer = new Task[GameConfig.Width * GameConfig.Height];
-            _generators = new List<RectTransform>(GameConfig.Width);
+            _generators = new List<TileManager>(GameConfig.Width);
+            _diagonalTiles = new List<TileManager>();
 
             InitializeTiles();
 
@@ -61,33 +66,119 @@ namespace Hudossay.Match3.Assets.Scripts
                         tileManager.Init(position, _tileManagers);
 
                         if (tileManager.IsGenerator)
-                            _generators.Add(rectTroansform);
+                            _generators.Add(tileManager);
+
+                        if (tileManager.CanAcceptDiagonal)
+                            _diagonalTiles.Add(tileManager);
                     }
             }
         }
 
 
-        public async Task RefillTokens()
+        private async void FillWithTokens()
         {
+            while (true)
+            {
+                if (!TryGenerateTokens())
+                    break;
+
+                foreach (var diagonalTile in _diagonalTiles)
+                    PullTokenDiagonally(diagonalTile);
+
+                await Task.Delay(GenerationDelayMilliseconds);
+            }
+        }
+
+
+        private bool TryGenerateTokens()
+        {
+            var anyTokensGenerated = false;
+
             foreach (var generator in _generators)
             {
+                if (generator.HasToken)
+                    continue;
+
+                anyTokensGenerated = true;
                 var tokenDefinition = GameConfig.TokenDefinitionOptions.PickRandom(o => o.ProbabilityWeight).TokenDefinition;
 
                 var token = _pool.Rent();
                 var tokenManager = token.GetComponent<TokenManager>();
                 var tokenRectTransform = token.GetComponent<RectTransform>();
 
-                tokenRectTransform.anchoredPosition = generator.anchoredPosition + _generatedTokenDisplacement;
+                tokenRectTransform.anchoredPosition = generator.RectTransform.anchoredPosition + _generatedTokenDisplacement;
                 tokenManager.SetNewTokenDefinition(tokenDefinition);
-                tokenManager.AddTravelDestination(generator.anchoredPosition);
+                tokenManager.AddTravelDestination(generator.RectTransform.anchoredPosition);
 
                 token.SetActive(true);
+
+                generator.Token = tokenManager;
+                PushTokenDown(generator);
+            }
+
+            return anyTokensGenerated;
+        }
+
+
+        private void PushTokenDown(TileManager pushFromTile)
+        {
+            if (!TryGetBottomEmptyTile(pushFromTile, out var bottomTile))
+                return;
+
+            pushFromTile.SendTokenTo(bottomTile);
+
+
+            bool TryGetBottomEmptyTile(TileManager fromTile, out TileManager foundTile)
+            {
+                var result = false;
+                foundTile = null;
+
+                for(int y = fromTile.Position.y - 1; y >= 0; y--)
+                {
+                    var currentTile = _tileManagers[fromTile.Position.x, y];
+
+                    if (!currentTile || currentTile.IsBlocked || currentTile.HasToken)
+                        break;
+
+                    foundTile = currentTile;
+                    result = true;
+                }
+
+                return result;
+            }
+        }
+
+
+        private void PullTokenDiagonally(TileManager pullToTile)
+        {
+            var tileToPull = GetTileToPullFrom();
+
+            if (tileToPull == null || pullToTile.HasToken)
+                return;
+
+            tileToPull.SendTokenTo(pullToTile);
+
+            PushTokenDown(pullToTile);
+
+
+            TileManager GetTileToPullFrom()
+            {
+                var hasLeftTile = _tileManagers.TryGetValue(pullToTile.Position.x - 1, pullToTile.Position.y + 1, out var leftTile) && leftTile.HasToken;
+                var hasRightTile = _tileManagers.TryGetValue(pullToTile.Position.x + 1, pullToTile.Position.y + 1, out var rightTile) && rightTile.HasToken;
+
+                return (hasLeftTile, hasRightTile) switch
+                {
+                    (true, true) => UnityEngine.Random.Range(0, 2) > 0 ? leftTile : rightTile,
+                    (true, false) => leftTile,
+                    (false, true) => rightTile,
+                    _ => null,
+                };
             }
         }
 
 
         [ContextMenu("Rescale")]
-        private void ScaleArea()
+        private void RescaleArea()
         {
             var parentSize = _parentRectTransform.sizeDelta;
             var newSizeDelta = new Vector2(GameConfig.Width * GameConfig.TileWidth, GameConfig.Height * GameConfig.TileHeight);

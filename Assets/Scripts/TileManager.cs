@@ -6,10 +6,15 @@ namespace Hudossay.Match3.Assets.Scripts
 {
     public class TileManager : MonoBehaviour
     {
+        public RectTransform RectTransform;
+        public TokenManager Token;
         public Vector2Int Position;
+
         public bool IsGenerator;
         public bool IsBlocked;
         public bool CanAcceptDiagonal;
+
+        public bool HasToken => Token != null;
 
         [Space(15)]
         public Sprite BackgroundEven;
@@ -49,9 +54,18 @@ namespace Hudossay.Match3.Assets.Scripts
         }
 
 
+        public void SendTokenTo(TileManager other)
+        {
+            other.Token = Token;
+            Token = null;
+            other.Token.AddTravelDestination(other.RectTransform.anchoredPosition);
+        }
+
+
         private void Reset()
         {
             _image = GetComponent<Image>();
+            RectTransform = GetComponent<RectTransform>();
         }
     }
 }
