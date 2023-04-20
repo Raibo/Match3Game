@@ -1,26 +1,39 @@
 using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
 
 namespace Hudossay.Match3.Assets.Scripts
 {
+    [RequireComponent(typeof(ObjectPool))]
     public class TileAreaManager : MonoBehaviour
     {
         public GameConfig GameConfig;
 
         private TileManager[,] _tileManagers;
+        private List<RectTransform> _generators;
+        private Task[] _waitBuffer;
 
-        [HideInInspector] private Transform _transform;
-        [HideInInspector] private RectTransform _rectTransform;
-        [HideInInspector] private RectTransform _parentRectTransform;
+        private readonly Vector2 _generatedTokenDisplacement = new(0f, 200f);
+
+        [Space(15)]
+        [SerializeField] private Transform _tilesParent;
+        [SerializeField] private RectTransform _rectTransform;
+        [SerializeField] private RectTransform _parentRectTransform;
+        [SerializeField] private ObjectPool _pool;
 
 
-        private void OnEnable() =>
+        private void Start()
+        {
             Init();
-
+            RefillTokens();
+        }
 
         public void Init()
         {
             _tileManagers = new TileManager[GameConfig.Width, GameConfig.Height];
+            _waitBuffer = new Task[GameConfig.Width * GameConfig.Height];
+            _generators = new List<RectTransform>(GameConfig.Width);
 
             InitializeTiles();
 
@@ -38,14 +51,37 @@ namespace Hudossay.Match3.Assets.Scripts
                             _ => GameConfig.RegularTilePrefab,
                         };
 
-                        var tileObject = Instantiate(prefab, _transform);
+                        var tileObject = Instantiate(prefab, _tilesParent);
                         var tileManager = tileObject.GetComponent<TileManager>();
                         _tileManagers[x, y] = tileManager;
 
                         var rectTroansform = tileObject.GetComponent<RectTransform>();
-                        rectTroansform.anchoredPosition = new Vector2(x * GameConfig.TileWidth, y * GameConfig.TileHeight);
+                        var rectPosition = new Vector2((x + 0.5f) * GameConfig.TileWidth, (y + 0.5f) * GameConfig.TileHeight);
+                        rectTroansform.anchoredPosition = rectPosition;
                         tileManager.Init(position, _tileManagers);
+
+                        if (tileManager.IsGenerator)
+                            _generators.Add(rectTroansform);
                     }
+            }
+        }
+
+
+        public async Task RefillTokens()
+        {
+            foreach (var generator in _generators)
+            {
+                var tokenDefinition = GameConfig.TokenDefinitionOptions.PickRandom(o => o.ProbabilityWeight).TokenDefinition;
+
+                var token = _pool.Rent();
+                var tokenManager = token.GetComponent<TokenManager>();
+                var tokenRectTransform = token.GetComponent<RectTransform>();
+
+                tokenRectTransform.anchoredPosition = generator.anchoredPosition + _generatedTokenDisplacement;
+                tokenManager.SetNewTokenDefinition(tokenDefinition);
+                tokenManager.AddTravelDestination(generator.anchoredPosition);
+
+                token.SetActive(true);
             }
         }
 
@@ -71,9 +107,9 @@ namespace Hudossay.Match3.Assets.Scripts
 
         private void OnValidate()
         {
-            _transform = transform;
             _rectTransform = GetComponent<RectTransform>();
-            _parentRectTransform = _transform.parent.GetComponent<RectTransform>();
+            _parentRectTransform = transform.parent.GetComponent<RectTransform>();
+            _pool = GetComponent<ObjectPool>();
         }
     }
 }

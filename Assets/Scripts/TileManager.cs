@@ -15,8 +15,7 @@ namespace Hudossay.Match3.Assets.Scripts
         public Sprite BackgroundEven;
         public Sprite BackgroundOdd;
 
-        [SerializeField]
-        private Image _image;
+        [SerializeField] private Image _image;
 
 
         public void Init(Vector2Int position, TileManager[,] tileManagers)
