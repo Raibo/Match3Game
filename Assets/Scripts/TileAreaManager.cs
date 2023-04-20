@@ -35,7 +35,7 @@ namespace Hudossay.Match3.Assets.Scripts
                         {
                             _ when position.y == GameConfig.Height - 1 => GameConfig.GeneratorTilePrefab,
                             _ when GameConfig.BlockedTiles.Contains(position) => GameConfig.BlockedTilePrefab,
-                            _ => GameConfig.DefaultTilePrefab,
+                            _ => GameConfig.RegularTilePrefab,
                         };
 
                         var tileObject = Instantiate(prefab, _transform);
@@ -53,13 +53,18 @@ namespace Hudossay.Match3.Assets.Scripts
         private void ScaleArea()
         {
             var parentSize = _parentRectTransform.sizeDelta;
-            _rectTransform.sizeDelta = new Vector2(GameConfig.Width * GameConfig.TileWidth, GameConfig.Height * GameConfig.TileHeight);
+            var newSizeDelta = new Vector2(GameConfig.Width * GameConfig.TileWidth, GameConfig.Height * GameConfig.TileHeight);
 
             var minimumParentDimension = Math.Min(parentSize.x, parentSize.y);
-            var maximumAreaDimansion = Mathf.Max(_rectTransform.sizeDelta.x, _rectTransform.sizeDelta.y);
+            var maximumAreaDimansion = Mathf.Max(newSizeDelta.x, newSizeDelta.y);
             var scale = minimumParentDimension / maximumAreaDimansion;
+            var newScaleVEctor = new Vector3(scale, scale, scale);
 
-            _rectTransform.localScale = new Vector3(scale, scale, scale);
+            if (_rectTransform.sizeDelta != newSizeDelta || _rectTransform.localScale != newScaleVEctor)
+            {
+                _rectTransform.sizeDelta = newSizeDelta;
+                _rectTransform.localScale = newScaleVEctor;
+            }
         }
 
 

@@ -12,12 +12,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8f08d8c603e952b40a3c572023b60962, type: 3}
   m_Name: GameConfig
   m_EditorClassIdentifier: 
-  Width: 10
-  Height: 10
+  Width: 8
+  Height: 8
   TileWidth: 100
   TileHeight: 100
-  DefaultTilePrefab: {fileID: 502437906481759371, guid: b631dccdff44d2d42bbac85e9b497990, type: 3}
-  GeneratorTilePrefab: {fileID: 502437906481759371, guid: b631dccdff44d2d42bbac85e9b497990, type: 3}
-  BlockedTilePrefab: {fileID: 502437906481759371, guid: b631dccdff44d2d42bbac85e9b497990, type: 3}
+  RegularTilePrefab: {fileID: 502437906481759371, guid: b631dccdff44d2d42bbac85e9b497990, type: 3}
+  GeneratorTilePrefab: {fileID: 502437906481759371, guid: 5f4fe61ee8df66a47a1da381e0e4e4dd, type: 3}
+  BlockedTilePrefab: {fileID: 502437906481759371, guid: db1f7a168b80dda4696cd671dc570067, type: 3}
   TokenDefinitions: []
-  BlockedTiles: []
+  BlockedTiles:
+  - {x: 5, y: 1}
+  - {x: 5, y: 2}
+  - {x: 6, y: 2}
+  - {x: 7, y: 2}
+  - {x: 1, y: 5}
+  - {x: 1, y: 6}
+  - {x: 3, y: 5}
+  - {x: 4, y: 5}

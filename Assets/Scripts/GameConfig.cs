@@ -14,7 +14,7 @@ namespace Hudossay.Match3.Assets.Scripts
         public float TileHeight;
 
         [Space(15)]
-        public GameObject DefaultTilePrefab;
+        public GameObject RegularTilePrefab;
         public GameObject GeneratorTilePrefab;
         public GameObject BlockedTilePrefab;
 

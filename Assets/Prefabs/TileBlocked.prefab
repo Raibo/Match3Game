@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 502437906481759369}
   - component: {fileID: -1583048331587169397}
   m_Layer: 5
-  m_Name: Tile
+  m_Name: TileBlocked
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -90,6 +90,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Position: {x: 0, y: 0}
-  BackgroundEven: {fileID: 21300000, guid: 01af46038be2e864abddf2a8b0055d84, type: 3}
-  BackgroundOdd: {fileID: 21300000, guid: aa82cdc3a816a4f4e8bf6766e073cb6a, type: 3}
+  BackgroundEven: {fileID: 21300000, guid: e32c6d9b034134640bf5b66d209389c9, type: 3}
+  BackgroundOdd: {fileID: 21300000, guid: 16f45881f0c2bfe48b379e43de184a1d, type: 3}
   _image: {fileID: 502437906481759369}
