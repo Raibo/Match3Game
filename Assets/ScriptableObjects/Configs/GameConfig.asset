@@ -19,7 +19,21 @@ MonoBehaviour:
   RegularTilePrefab: {fileID: 502437906481759371, guid: b631dccdff44d2d42bbac85e9b497990, type: 3}
   GeneratorTilePrefab: {fileID: 502437906481759371, guid: 5f4fe61ee8df66a47a1da381e0e4e4dd, type: 3}
   BlockedTilePrefab: {fileID: 502437906481759371, guid: db1f7a168b80dda4696cd671dc570067, type: 3}
-  TokenDefinitions: []
+  TokenDefinitionOptions:
+  - ProbabilityWeight: 1
+    TokenDefinition: {fileID: 11400000, guid: 9bb630f63148d144aa2555b41d89d131, type: 2}
+  - ProbabilityWeight: 1
+    TokenDefinition: {fileID: 11400000, guid: fbc25f2254f769845b227c0007c02f8d, type: 2}
+  - ProbabilityWeight: 1
+    TokenDefinition: {fileID: 11400000, guid: e3a15ad8c51340a4daa0ccdf91ca00cb, type: 2}
+  - ProbabilityWeight: 1
+    TokenDefinition: {fileID: 11400000, guid: 039b1415b0709fa458cf946389d1a483, type: 2}
+  - ProbabilityWeight: 1
+    TokenDefinition: {fileID: 11400000, guid: 07d937a6811675a44b4419956f8ae8c2, type: 2}
+  - ProbabilityWeight: 1
+    TokenDefinition: {fileID: 11400000, guid: 30e64339fba0c854ab526708c16b3915, type: 2}
+  - ProbabilityWeight: 0.5
+    TokenDefinition: {fileID: 11400000, guid: 97168062eb9acbe46bbe84b68014172b, type: 2}
   BlockedTiles:
   - {x: 5, y: 1}
   - {x: 5, y: 2}

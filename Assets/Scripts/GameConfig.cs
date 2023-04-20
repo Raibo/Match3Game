@@ -18,7 +18,7 @@ namespace Hudossay.Match3.Assets.Scripts
         public GameObject GeneratorTilePrefab;
         public GameObject BlockedTilePrefab;
 
-        public List<TokenDefinition> TokenDefinitions;
+        public List<TokenDefinitionOption> TokenDefinitionOptions;
         public List<Vector2Int> BlockedTiles;
 
 
