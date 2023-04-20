@@ -90,6 +90,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Position: {x: 0, y: 0}
+  IsGenerator: 1
+  CanAcceptDiagonal: 0
+  IsBlocked: 0
   BackgroundEven: {fileID: 21300000, guid: 01af46038be2e864abddf2a8b0055d84, type: 3}
   BackgroundOdd: {fileID: 21300000, guid: aa82cdc3a816a4f4e8bf6766e073cb6a, type: 3}
   _image: {fileID: 502437906481759369}

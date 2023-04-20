@@ -27,8 +27,8 @@ namespace Hudossay.Match3.Assets.Scripts
 
             void InitializeTiles()
             {
-                for (int x = 0; x < GameConfig.Width; x++)
-                    for (int y = 0; y < GameConfig.Height; y++)
+                for (int y = GameConfig.Height - 1; y >= 0; y--)
+                    for (int x = 0; x < GameConfig.Width; x++)
                     {
                         var position = new Vector2Int(x, y);
                         var prefab = position switch
@@ -44,12 +44,13 @@ namespace Hudossay.Match3.Assets.Scripts
 
                         var rectTroansform = tileObject.GetComponent<RectTransform>();
                         rectTroansform.anchoredPosition = new Vector2(x * GameConfig.TileWidth, y * GameConfig.TileHeight);
-                        tileManager.Init(position);
+                        tileManager.Init(position, _tileManagers);
                     }
             }
         }
 
 
+        [ContextMenu("Rescale")]
         private void ScaleArea()
         {
             var parentSize = _parentRectTransform.sizeDelta;
@@ -73,8 +74,6 @@ namespace Hudossay.Match3.Assets.Scripts
             _transform = transform;
             _rectTransform = GetComponent<RectTransform>();
             _parentRectTransform = _transform.parent.GetComponent<RectTransform>();
-
-            ScaleArea();
         }
     }
 }
