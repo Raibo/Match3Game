@@ -3,6 +3,8 @@ using Hudossay.AttributeEvents.Assets.Runtime.Attributes;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 namespace Hudossay.Match3.Assets.Scripts
 {
@@ -18,6 +20,10 @@ namespace Hudossay.Match3.Assets.Scripts
         [SerializeField] private RectTransform _parentRectTransform;
         [SerializeField] private TokenPool _tokenPool;
         [SerializeField] private EventLinker _eventLinker;
+
+        [SerializeField] private Transform _dragImageTransform;
+        [SerializeField] private Image _dragImageImage;
+        [SerializeField] private GameObject _dragImageObject;
 
         private TileManager[,] _tiles;
         private List<TileManager> _generators;
@@ -71,9 +77,31 @@ namespace Hudossay.Match3.Assets.Scripts
             _selectedTile = newSelected;
 
 
+        [ResponseLocal(TileEventKind.DragBegin)]
+        public void OnDragBegin(TileManager draggedTile)
+        {
+            if (!draggedTile.IsSettled)
+                return;
+
+            _dragImageImage.sprite = draggedTile.Token.TokenDefinition.Sprite;
+            _dragImageObject.SetActive(true);
+        }
+
+
+        [ResponseLocal(TileEventKind.DragFrame)]
+        public void OnDragFrame(PointerEventData eventData)
+        {
+            var position = eventData.pressEventCamera.ScreenToWorldPoint(Input.mousePosition);
+            position.z = 0f;
+            _dragImageTransform.position = position;
+        }
+
+
         [ResponseLocal(TileEventKind.DragEnd)]
         public void OnDragEnd(TileManager draggedTile)
         {
+            _dragImageObject.SetActive(false);
+
             if (draggedTile != _selectedTile)
                 draggedTile.SwapTokensWith(_selectedTile);
         }

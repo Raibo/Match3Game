@@ -34,7 +34,7 @@ namespace Hudossay.Match3.Assets.Scripts
         [EventLocal(TileEventKind.Selected)] public GameEvent<TileManager> Selected;
         [EventLocal(TileEventKind.ClickedLeft)] public GameEvent<TileManager> ClickedLeft;
         [EventLocal(TileEventKind.ClickedRight)] public GameEvent<TileManager> ClickedRight;
-        [EventLocal(TileEventKind.DragFrame)] public GameEvent<TileManager> DragFrame;
+        [EventLocal(TileEventKind.DragFrame)] public GameEvent<PointerEventData> DragFrame;
 
         [Space(15)]
         public Sprite BackgroundEven;
@@ -325,7 +325,7 @@ namespace Hudossay.Match3.Assets.Scripts
 
 
         public void OnDrag(PointerEventData eventData) =>
-            DragFrame.Raise(this);
+            DragFrame.Raise(eventData);
 
 
         public void OnPointerEnter(PointerEventData eventData) =>
