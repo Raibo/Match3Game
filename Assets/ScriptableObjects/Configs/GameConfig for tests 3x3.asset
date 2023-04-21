@@ -20,6 +20,8 @@ MonoBehaviour:
   GeneratorTilePrefab: {fileID: 3083916766002513585, guid: f1bb1b8848f8c9a43a14ee38f5d86538, type: 3}
   BlockedTilePrefab: {fileID: 3083916766002513585, guid: 606089c0e47eb7349ae85ead370ec7c9, type: 3}
   GeneratedTokensDisplacement: {x: 0, y: 100}
+  TokenStartSpeed: 500
+  TokenAcceleration: 500
   TokenDefinitionOptions:
   - ProbabilityWeight: 1
     TokenDefinition: {fileID: 11400000, guid: 9bb630f63148d144aa2555b41d89d131, type: 2}

@@ -16,9 +16,10 @@ namespace Hudossay.Match3.Assets.Scripts
         private bool _isMoving;
         private ObjectCounter _movingObjectsCounter;
         private TaskCompletionSource<bool> _taskSource;
+        private GameConfig _gameConfig;
+
         private bool _isMovingDiagonally;
 
-        private const float Speed = 700f;
         private const float DiagonalSpeedFactor = 1.42f;
 
 
@@ -26,11 +27,12 @@ namespace Hudossay.Match3.Assets.Scripts
             MoveTowardsDestination();
 
 
-        public void Init(TokenDefinition newDefinition, ObjectCounter movingObjectsCounter)
+        public void Init(TokenDefinition newDefinition, ObjectCounter movingObjectsCounter, GameConfig gameConfig)
         {
             _image.sprite = newDefinition.Sprite;
             TokenDefinition = newDefinition;
             _movingObjectsCounter = movingObjectsCounter;
+            _gameConfig = gameConfig;
         }
 
 
@@ -54,7 +56,7 @@ namespace Hudossay.Match3.Assets.Scripts
             if (!_isMoving)
                 return;
 
-            var speed = _isMovingDiagonally ? Speed * DiagonalSpeedFactor : Speed;
+            var speed = _isMovingDiagonally ? _gameConfig.TokenSpeed * DiagonalSpeedFactor : _gameConfig.TokenSpeed;
 
             var toNextDestinationVector = _destination - RectTransform.anchoredPosition;
             var movingVector = speed * Time.deltaTime * toNextDestinationVector.normalized;

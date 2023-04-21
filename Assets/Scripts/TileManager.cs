@@ -113,7 +113,7 @@ namespace Hudossay.Match3.Assets.Scripts
 
                 newToken.RectTransform.anchoredPosition = RectTransform.anchoredPosition + _gameConfig.GeneratedTokensDisplacement;
 
-                newToken.Init(tokenDefinition, _movingObjectsCounter);
+                newToken.Init(tokenDefinition, _movingObjectsCounter, _gameConfig);
                 newToken.SetTravelDestination(RectTransform.anchoredPosition, false);
                 newToken.gameObject.SetActive(true);
 
