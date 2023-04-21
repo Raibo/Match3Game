@@ -16,7 +16,7 @@ MonoBehaviour:
   Height: 8
   TileWidth: 100
   TileHeight: 100
-  OnClickExplosion: {fileID: 11400000, guid: b1089459667a1914ea702bb5416db12c, type: 2}
+  OnClickExplosion: {fileID: 11400000, guid: 193193851ba0cb34a9582433bd677199, type: 2}
   RegularTilePrefab: {fileID: 3083916766002513585, guid: ad17c691947255f4899527d6cf00b49a, type: 3}
   GeneratorTilePrefab: {fileID: 3083916766002513585, guid: f1bb1b8848f8c9a43a14ee38f5d86538, type: 3}
   BlockedTilePrefab: {fileID: 3083916766002513585, guid: 606089c0e47eb7349ae85ead370ec7c9, type: 3}

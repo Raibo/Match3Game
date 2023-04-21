@@ -32,13 +32,23 @@ namespace Hudossay.Match3.Assets.Scripts
         private HashSet<TileManager> _ExplodeBuffer;
 
         private TileManager _selectedTile;
+        private bool _triggeredPull;
 
 
         private void Start()
         {
             RescaleArea();
             Init();
-            TriggerTilesPull();
+        }
+
+
+        private void Update()
+        {
+            if (Input.GetKeyDown(KeyCode.Space) && !_triggeredPull)
+            {
+                _triggeredPull = true;
+                TriggerTilesPull();
+            }
         }
 
 
