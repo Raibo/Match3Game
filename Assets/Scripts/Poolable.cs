@@ -4,18 +4,18 @@ namespace Hudossay.Match3.Assets.Scripts
 {
     public class Poolable : MonoBehaviour
     {
-        public ObjectPool Pool;
-        private GameObject _gameObject;
+        public TokenPool Pool;
+        private TokenManager _tokenManager;
 
 
-        public void Init(ObjectPool pool)
+        public void Init(TokenPool pool, TokenManager tokenManager)
         {
-            _gameObject = gameObject;
+            _tokenManager = tokenManager;
             Pool = pool;
         }
 
 
         public void Return() =>
-            Pool.Return(_gameObject);
+            Pool.Return(_tokenManager);
     }
 }

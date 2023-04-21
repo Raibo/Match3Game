@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -8,78 +7,82 @@ namespace Hudossay.Match3.Assets.Scripts
     public class TokenManager : MonoBehaviour
     {
         public TokenDefinition TokenDefinition;
-        public Task TravelTask => _taskSource?.Task ?? Task.CompletedTask;
+        public RectTransform RectTransform;
+        public Task DestinationReach => _taskSource?.Task ?? Task.CompletedTask;
 
         [SerializeField] private Image _image;
-        [SerializeField] private RectTransform _rectTransform;
 
-        private Queue<Vector2> _destinations;
+        private Vector2 _destination;
+        private bool _isMoving;
+        private ObjectCounter _movingObjectsCounter;
         private TaskCompletionSource<bool> _taskSource;
+        private bool _isMovingDiagonally;
 
-        private const float ProximityThreshold = 0.01f;
+        private const float ProximityThreshold = 15f;
         private const float Speed = 700f;
-
-
-        private void Awake()
-        {
-            _destinations ??= new();
-            _destinations.Clear();
-        }
+        private const float DiagonalSpeedFactor = 1.42f;
 
 
         private void FixedUpdate() =>
-            MoveTowardsNextDestination();
+            MoveTowardsDestination();
 
 
-        public void SetNewTokenDefinition(TokenDefinition newDefinition)
+        public void Init(TokenDefinition newDefinition, ObjectCounter movingObjectsCounter)
         {
             _image.sprite = newDefinition.Sprite;
             TokenDefinition = newDefinition;
+            _movingObjectsCounter = movingObjectsCounter;
         }
 
 
-        public void AddTravelDestination(Vector2 newDestination)
+        public void SetTravelDestination(Vector2 newDestination, bool isDiagonal)
         {
-            _destinations.Enqueue(newDestination);
+            _destination = newDestination;
+            _isMovingDiagonally = isDiagonal;
+
+            if (!_isMoving)
+                _movingObjectsCounter.IncreaseCount();
+
+            _isMoving = true;
 
             if (_taskSource is null || _taskSource.Task.IsCompleted)
                 _taskSource = new();
         }
 
 
-        private void MoveTowardsNextDestination()
+        private void MoveTowardsDestination()
         {
-            if (_destinations.Count == 0)
+            if (!_isMoving)
                 return;
 
-            var currentDestination = _destinations.Peek();
+            var speed = _isMovingDiagonally ? Speed * DiagonalSpeedFactor : Speed;
+            var threshold = _isMovingDiagonally ? ProximityThreshold * DiagonalSpeedFactor : ProximityThreshold;
 
-            var toNextDestinationVector = currentDestination - _rectTransform.anchoredPosition;
+            var toNextDestinationVector = _destination - RectTransform.anchoredPosition;
 
-            if (toNextDestinationVector.sqrMagnitude <= ProximityThreshold * ProximityThreshold)
+            if (toNextDestinationVector.sqrMagnitude <= threshold * threshold)
             {
-                _rectTransform.anchoredPosition = currentDestination;
-                _destinations.Dequeue();
-
-                if (_destinations.Count == 0)
-                    _taskSource.SetResult(true);
+                RectTransform.anchoredPosition = _destination;
+                _isMoving = false;
+                _movingObjectsCounter.DecreaseCount();
+                _taskSource.SetResult(true);
 
                 return;
             }
 
-            var movingVector = toNextDestinationVector.normalized * Speed * Time.deltaTime;
-            
+            var movingVector = toNextDestinationVector.normalized * speed * Time.deltaTime;
+
             if (movingVector.sqrMagnitude > toNextDestinationVector.sqrMagnitude)
                 movingVector = toNextDestinationVector;
 
-            _rectTransform.anchoredPosition += movingVector;
+            RectTransform.anchoredPosition += movingVector;
         }
 
 
         private void Reset()
         {
             _image = GetComponent<Image>();
-            _rectTransform = GetComponent<RectTransform>();
+            RectTransform = GetComponent<RectTransform>();
         }
     }
 }

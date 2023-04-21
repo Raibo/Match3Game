@@ -1,44 +1,39 @@
 using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using UnityEngine;
 
 namespace Hudossay.Match3.Assets.Scripts
 {
-    [RequireComponent(typeof(ObjectPool))]
+    [RequireComponent(typeof(TokenPool))]
     public class TileAreaManager : MonoBehaviour
     {
         public GameConfig GameConfig;
 
-        private TileManager[,] _tileManagers;
+        private TileManager[,] _tiles;
         private List<TileManager> _generators;
         private List<TileManager> _diagonalTiles;
-        private Task[] _waitBuffer;
-
-        private readonly Vector2 _generatedTokenDisplacement = new(0f, 200f);
+        private ObjectCounter _movingObjectCounter;
 
         [Space(15)]
         [SerializeField] private Transform _tilesParent;
         [SerializeField] private RectTransform _rectTransform;
         [SerializeField] private RectTransform _parentRectTransform;
-        [SerializeField] private ObjectPool _pool;
-
-        private const int GenerationDelayMilliseconds = 300;
+        [SerializeField] private TokenPool _tokenPool;
 
 
-        private async void Start()
+        private void Start()
         {
             RescaleArea();
             Init();
-            FillWithTokens();
+            TriggerTilesPull();
         }
 
         private void Init()
         {
-            _tileManagers = new TileManager[GameConfig.Width, GameConfig.Height];
-            _waitBuffer = new Task[GameConfig.Width * GameConfig.Height];
+            _tiles = new TileManager[GameConfig.Width, GameConfig.Height];
             _generators = new List<TileManager>(GameConfig.Width);
             _diagonalTiles = new List<TileManager>();
+            _movingObjectCounter = new ObjectCounter();
 
             InitializeTiles();
 
@@ -51,19 +46,24 @@ namespace Hudossay.Match3.Assets.Scripts
                         var position = new Vector2Int(x, y);
                         var prefab = position switch
                         {
-                            _ when position.y == GameConfig.Height - 1 => GameConfig.GeneratorTilePrefab,
                             _ when GameConfig.BlockedTiles.Contains(position) => GameConfig.BlockedTilePrefab,
+                            _ when position.y == GameConfig.Height - 1 => GameConfig.GeneratorTilePrefab,
                             _ => GameConfig.RegularTilePrefab,
                         };
 
                         var tileObject = Instantiate(prefab, _tilesParent);
                         var tileManager = tileObject.GetComponent<TileManager>();
-                        _tileManagers[x, y] = tileManager;
+                        _tiles[x, y] = tileManager;
 
                         var rectTroansform = tileObject.GetComponent<RectTransform>();
                         var rectPosition = new Vector2((x + 0.5f) * GameConfig.TileWidth, (y + 0.5f) * GameConfig.TileHeight);
                         rectTroansform.anchoredPosition = rectPosition;
-                        tileManager.Init(position, _tileManagers);
+
+                        _tiles.TryGetValue(x - 1, y + 1, out var upperLeftTile);
+                        _tiles.TryGetValue(x , y + 1, out var upperMiddleTile);
+                        _tiles.TryGetValue(x + 1, y + 1, out var upperRightTile);
+
+                        tileManager.Init(position, upperLeftTile, upperMiddleTile, upperRightTile, _tokenPool, _movingObjectCounter, GameConfig);
 
                         if (tileManager.IsGenerator)
                             _generators.Add(tileManager);
@@ -75,105 +75,11 @@ namespace Hudossay.Match3.Assets.Scripts
         }
 
 
-        private async void FillWithTokens()
+        private void TriggerTilesPull()
         {
-            while (true)
-            {
-                if (!TryGenerateTokens())
-                    break;
-
-                foreach (var diagonalTile in _diagonalTiles)
-                    PullTokenDiagonally(diagonalTile);
-
-                await Task.Delay(GenerationDelayMilliseconds);
-            }
-        }
-
-
-        private bool TryGenerateTokens()
-        {
-            var anyTokensGenerated = false;
-
-            foreach (var generator in _generators)
-            {
-                if (generator.HasToken)
-                    continue;
-
-                anyTokensGenerated = true;
-                var tokenDefinition = GameConfig.TokenDefinitionOptions.PickRandom(o => o.ProbabilityWeight).TokenDefinition;
-
-                var token = _pool.Rent();
-                var tokenManager = token.GetComponent<TokenManager>();
-                var tokenRectTransform = token.GetComponent<RectTransform>();
-
-                tokenRectTransform.anchoredPosition = generator.RectTransform.anchoredPosition + _generatedTokenDisplacement;
-                tokenManager.SetNewTokenDefinition(tokenDefinition);
-                tokenManager.AddTravelDestination(generator.RectTransform.anchoredPosition);
-
-                token.SetActive(true);
-
-                generator.Token = tokenManager;
-                PushTokenDown(generator);
-            }
-
-            return anyTokensGenerated;
-        }
-
-
-        private void PushTokenDown(TileManager pushFromTile)
-        {
-            if (!TryGetBottomEmptyTile(pushFromTile, out var bottomTile))
-                return;
-
-            pushFromTile.SendTokenTo(bottomTile);
-
-
-            bool TryGetBottomEmptyTile(TileManager fromTile, out TileManager foundTile)
-            {
-                var result = false;
-                foundTile = null;
-
-                for(int y = fromTile.Position.y - 1; y >= 0; y--)
-                {
-                    var currentTile = _tileManagers[fromTile.Position.x, y];
-
-                    if (!currentTile || currentTile.IsBlocked || currentTile.HasToken)
-                        break;
-
-                    foundTile = currentTile;
-                    result = true;
-                }
-
-                return result;
-            }
-        }
-
-
-        private void PullTokenDiagonally(TileManager pullToTile)
-        {
-            var tileToPull = GetTileToPullFrom();
-
-            if (tileToPull == null || pullToTile.HasToken)
-                return;
-
-            tileToPull.SendTokenTo(pullToTile);
-
-            PushTokenDown(pullToTile);
-
-
-            TileManager GetTileToPullFrom()
-            {
-                var hasLeftTile = _tileManagers.TryGetValue(pullToTile.Position.x - 1, pullToTile.Position.y + 1, out var leftTile) && leftTile.HasToken;
-                var hasRightTile = _tileManagers.TryGetValue(pullToTile.Position.x + 1, pullToTile.Position.y + 1, out var rightTile) && rightTile.HasToken;
-
-                return (hasLeftTile, hasRightTile) switch
-                {
-                    (true, true) => UnityEngine.Random.Range(0, 2) > 0 ? leftTile : rightTile,
-                    (true, false) => leftTile,
-                    (false, true) => rightTile,
-                    _ => null,
-                };
-            }
+            for (int x = 0; x < GameConfig.Width; x++)
+                for (int y = 0; y < GameConfig.Height; y++)
+                    _tiles[x, y].PullTokenFromAbove();
         }
 
 
@@ -200,7 +106,7 @@ namespace Hudossay.Match3.Assets.Scripts
         {
             _rectTransform = GetComponent<RectTransform>();
             _parentRectTransform = transform.parent.GetComponent<RectTransform>();
-            _pool = GetComponent<ObjectPool>();
+            _tokenPool = GetComponent<TokenPool>();
         }
     }
 }
