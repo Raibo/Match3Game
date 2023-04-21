@@ -5,12 +5,13 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 namespace Hudossay.Match3.Assets.Scripts
 {
     [RequireComponent(typeof(EventLinker))]
-    public class TileManager : MonoBehaviour
+    public class TileManager : MonoBehaviour, IPointerClickHandler, IBeginDragHandler, IEndDragHandler, IDragHandler, IPointerEnterHandler
     {
         public RectTransform RectTransform;
         public TokenManager Token;
@@ -27,7 +28,13 @@ namespace Hudossay.Match3.Assets.Scripts
 
         public bool HasToken => Token != null;
 
-        [EventLocal(EventKind.TileSettled)] public GameEvent<TileManager> Settled;
+        [EventLocal(TileEventKind.Settled)] public GameEvent<TileManager> Settled;
+        [EventLocal(TileEventKind.DragBegin)] public GameEvent<TileManager> DragBegin;
+        [EventLocal(TileEventKind.DragEnd)] public GameEvent<TileManager> DragEnd;
+        [EventLocal(TileEventKind.Selected)] public GameEvent<TileManager> Selected;
+        [EventLocal(TileEventKind.ClickedLeft)] public GameEvent<TileManager> ClickedLeft;
+        [EventLocal(TileEventKind.ClickedRight)] public GameEvent<TileManager> ClickedRight;
+        [EventLocal(TileEventKind.DragFrame)] public GameEvent<TileManager> DragFrame;
 
         [Space(15)]
         public Sprite BackgroundEven;
@@ -219,24 +226,24 @@ namespace Hudossay.Match3.Assets.Scripts
                 Token.SetTravelDestination(RectTransform.anchoredPosition, isDiagonal);
                 ScheduleTokenAvailability();
             }
+        }
 
 
-            async void ScheduleTokenAvailability()
-            {
-                await Token.DestinationReach;
+        public void SwapTokensWith(TileManager tileToSwap)
+        {
+            if (!IsSettled || !tileToSwap.IsSettled)
+                return;
 
-                _streightTokenAvailabilitySource.SetResult(true);
+            (Token, tileToSwap.Token) = (tileToSwap.Token, Token);
 
-                if (HasToken && TokenAvailableStreight.IsCompleted)
-                    _diagonalTokenAvailabilitySource.SetResult(true);
+            ResetTokenAvailability();
+            tileToSwap.ResetTokenAvailability();
 
-                if (HasToken && TokenAvailableStreight.IsCompleted)
-                {
-                    IsSettled = true;
-                    Settled.Raise(this);
-                    _image.color = Color.green;
-                }
-            }
+            Token.SetTravelDestination(RectTransform.anchoredPosition, isDiagonal: false);
+            tileToSwap.Token.SetTravelDestination(tileToSwap.RectTransform.anchoredPosition, isDiagonal: false);
+
+            ScheduleTokenAvailability();
+            tileToSwap.ScheduleTokenAvailability();
         }
 
 
@@ -249,7 +256,23 @@ namespace Hudossay.Match3.Assets.Scripts
                 _diagonalTokenAvailabilitySource = new();
 
             IsSettled = false;
-            _image.color = Color.white;
+        }
+
+
+        public async void ScheduleTokenAvailability()
+        {
+            await Token.DestinationReach;
+
+            _streightTokenAvailabilitySource.SetResult(true);
+
+            if (HasToken && TokenAvailableStreight.IsCompleted)
+                _diagonalTokenAvailabilitySource.SetResult(true);
+
+            if (HasToken && TokenAvailableStreight.IsCompleted)
+            {
+                IsSettled = true;
+                Settled.Raise(this);
+            }
         }
 
 
@@ -281,6 +304,32 @@ namespace Hudossay.Match3.Assets.Scripts
             await Task.Yield();
             PullTokenFromAbove();
         }
+
+
+        public void OnPointerClick(PointerEventData eventData)
+        {
+            if (eventData.button == PointerEventData.InputButton.Left)
+                ClickedLeft.Raise(this);
+
+            if (eventData.button == PointerEventData.InputButton.Right)
+                ClickedRight.Raise(this);
+        }
+
+
+        public void OnEndDrag(PointerEventData eventData) =>
+            DragEnd.Raise(this);
+
+
+        public void OnBeginDrag(PointerEventData eventData) =>
+            DragBegin.Raise(this);
+
+
+        public void OnDrag(PointerEventData eventData) =>
+            DragFrame.Raise(this);
+
+
+        public void OnPointerEnter(PointerEventData eventData) =>
+            Selected.Raise(this);
 
 
         private void Reset()

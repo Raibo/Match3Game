@@ -14,6 +14,9 @@ namespace Hudossay.Match3.Assets.Scripts
         public float TileHeight;
 
         [Space(15)]
+        public ExplosionPattern OnClickExplosion;
+
+        [Space(15)]
         public GameObject RegularTilePrefab;
         public GameObject GeneratorTilePrefab;
         public GameObject BlockedTilePrefab;

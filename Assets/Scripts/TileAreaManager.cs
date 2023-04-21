@@ -25,6 +25,8 @@ namespace Hudossay.Match3.Assets.Scripts
         private HashSet<TileManager> _matchBuffer;
         private HashSet<TileManager> _ExplodeBuffer;
 
+        private TileManager _selectedTile;
+
 
         private void Start()
         {
@@ -34,7 +36,7 @@ namespace Hudossay.Match3.Assets.Scripts
         }
 
 
-        [ResponseLocal(EventKind.TileSettled)]
+        [ResponseLocal(TileEventKind.Settled)]
         public void HandleSettledTile(TileManager settledTile)
         {
             var matchingCross = new MatchingCross(settledTile.Position, settledTile.Token.TokenDefinition.MatchingGroups, _tiles);
@@ -48,15 +50,32 @@ namespace Hudossay.Match3.Assets.Scripts
             foreach (var match in _matchBuffer)
                 _ExplodeBuffer.Add(match);
 
-            if (_ExplodeBuffer.Count > 0)
-                ExplodeTiles(_ExplodeBuffer);
+            foreach (var tileToExplode in _ExplodeBuffer)
+                tileToExplode.KillToken();
         }
 
 
-        public void ExplodeTiles(IEnumerable<TileManager> tilesToExplode)
+        [ResponseLocal(TileEventKind.ClickedRight)]
+        public void ApplyExplosion(TileManager target)
         {
-            foreach (var tileToExplode in tilesToExplode)
+            _ExplodeBuffer.Clear();
+            GameConfig.OnClickExplosion?.AddTilesToExplode(target.Position, _tiles, _ExplodeBuffer);
+
+            foreach (var tileToExplode in _ExplodeBuffer)
                 tileToExplode.KillToken();
+        }
+
+
+        [ResponseLocal(TileEventKind.Selected)]
+        public void UpdateSelectedTile(TileManager newSelected) =>
+            _selectedTile = newSelected;
+
+
+        [ResponseLocal(TileEventKind.DragEnd)]
+        public void OnDragEnd(TileManager draggedTile)
+        {
+            if (draggedTile != _selectedTile)
+                draggedTile.SwapTokensWith(_selectedTile);
         }
 
 
