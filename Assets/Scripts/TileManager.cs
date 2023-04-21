@@ -39,6 +39,10 @@ namespace Hudossay.Match3.Assets.Scripts
         private List<TileManager> _diagonalWaitingList;
         private GameConfig _gameConfig;
 
+        private bool _isCurrentlyPulling;
+        private TimeSpan _generationDelay;
+        private float _lastTimeGenerated;
+
 
         public void Init(Vector2Int position, TileManager upperLeftTile, TileManager upperMiddleTile, TileManager upperRightTile,
             TokenPool tokenPool, ObjectCounter movingObjectsCounter, GameConfig gameConfig)
@@ -89,8 +93,10 @@ namespace Hudossay.Match3.Assets.Scripts
 
         public void PullTokenFromAbove()
         {
-            if (IsBlocked || HasToken)
+            if (IsBlocked || HasToken || _isCurrentlyPulling)
                 return;
+
+            _isCurrentlyPulling = true;
 
             switch (IsGenerator, CanAcceptDiagonal)
             {
@@ -105,9 +111,14 @@ namespace Hudossay.Match3.Assets.Scripts
                     break;
             }
 
+            _isCurrentlyPulling = false;
 
-            void GenerateToken()
+
+            async void GenerateToken()
             {
+                ResetGenerationDelayIfTimeout();
+                await Task.Delay(_generationDelay);
+
                 var newToken = _tokenPool.Rent();
                 var tokenDefinition = _gameConfig.TokenDefinitionOptions.PickRandom(o => o.ProbabilityWeight).TokenDefinition;
 
@@ -119,6 +130,25 @@ namespace Hudossay.Match3.Assets.Scripts
 
                 Token = newToken;
                 ScheduleTokenAvailability();
+                IncreaseGenerationDelay();
+
+
+                void ResetGenerationDelayIfTimeout()
+                {
+                    if (Time.time - _lastTimeGenerated > _gameConfig.GenerationDelayTimeout)
+                        _generationDelay = TimeSpan.Zero;
+                }
+
+
+                void IncreaseGenerationDelay()
+                {
+                    _lastTimeGenerated = Time.time;
+                    _generationDelay += TimeSpan.FromSeconds(_gameConfig.GenerationDelayDelta);
+
+                    _generationDelay = _generationDelay < TimeSpan.FromSeconds(_gameConfig.GenerationDelayMax)
+                        ? _generationDelay
+                        : TimeSpan.FromSeconds(_gameConfig.GenerationDelayMax);
+                }
             }
 
 

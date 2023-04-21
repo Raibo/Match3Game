@@ -21,6 +21,9 @@ namespace Hudossay.Match3.Assets.Scripts
         [Space(15)]
         public Vector2 GeneratedTokensDisplacement;
         public float TokenSpeed;
+        public float GenerationDelayDelta;
+        public float GenerationDelayMax;
+        public float GenerationDelayTimeout;
         public List<TokenDefinitionOption> TokenDefinitionOptions;
         public List<Vector2Int> BlockedTiles;
 
