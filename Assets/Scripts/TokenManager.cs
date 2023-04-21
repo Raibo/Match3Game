@@ -16,7 +16,6 @@ namespace Hudossay.Match3.Assets.Scripts
 
         private Vector2 _destination;
         private bool _isMoving;
-        private ObjectCounter _movingObjectsCounter;
         private TaskCompletionSource<bool> _taskSource;
         private GameConfig _gameConfig;
 
@@ -29,11 +28,10 @@ namespace Hudossay.Match3.Assets.Scripts
             MoveTowardsDestination();
 
 
-        public void Init(TokenDefinition newDefinition, ObjectCounter movingObjectsCounter, GameConfig gameConfig)
+        public void Init(TokenDefinition newDefinition, GameConfig gameConfig)
         {
             _image.sprite = newDefinition.Sprite;
             TokenDefinition = newDefinition;
-            _movingObjectsCounter = movingObjectsCounter;
             _gameConfig = gameConfig;
         }
 
@@ -42,9 +40,6 @@ namespace Hudossay.Match3.Assets.Scripts
         {
             _destination = newDestination;
             _isMovingDiagonally = isDiagonal;
-
-            if (!_isMoving)
-                _movingObjectsCounter.IncreaseCount();
 
             _isMoving = true;
 
@@ -75,7 +70,6 @@ namespace Hudossay.Match3.Assets.Scripts
 
             RectTransform.anchoredPosition = _destination;
             _isMoving = false;
-            _movingObjectsCounter.DecreaseCount();
             _taskSource.SetResult(true);
         }
 

@@ -9,10 +9,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8ad45335f338abd4db36d2efbc0ea7ba, type: 3}
-  m_Name: Green
+  m_Script: {fileID: 11500000, guid: 70548931527530748bdfbdbbe9c37ba1, type: 3}
+  m_Name: Bomb
   m_EditorClassIdentifier: 
-  Sprite: {fileID: 21300000, guid: 16b20121b05c3324495dfd3896c5d6b4, type: 3}
-  MatchingGroups:
-  - {fileID: 11400000, guid: 918f30ac71751dc499831be6f206eeb2, type: 2}
-  ExplosionPattern: {fileID: 0}
+  ExplosionPoints:
+  - {x: -1, y: -1}
+  - {x: -1, y: 0}
+  - {x: -1, y: 1}
+  - {x: 0, y: -1}
+  - {x: 0, y: 1}
+  - {x: 1, y: -1}
+  - {x: 1, y: 0}
+  - {x: 1, y: 1}

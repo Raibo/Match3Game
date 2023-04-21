@@ -22,8 +22,8 @@ namespace Hudossay.Match3.Assets.Scripts
         private TileManager[,] _tiles;
         private List<TileManager> _generators;
         private List<TileManager> _diagonalTiles;
-        private ObjectCounter _movingObjectCounter;
         private HashSet<TileManager> _matchBuffer;
+        private HashSet<TileManager> _ExplodeBuffer;
 
 
         private void Start()
@@ -40,17 +40,23 @@ namespace Hudossay.Match3.Assets.Scripts
             var matchingCross = new MatchingCross(settledTile.Position, settledTile.Token.TokenDefinition.MatchingGroups, _tiles);
             matchingCross.GetMatchedTiles(_matchBuffer);
 
-            if (_matchBuffer.Count > 0)
-                ExplodeTiles(_matchBuffer);
+            _ExplodeBuffer.Clear();
+
+            foreach (var match in _matchBuffer)
+                match.Token.TokenDefinition.ExplosionPattern?.AddTilesToExplode(match.Position, _tiles, _ExplodeBuffer);
+
+            foreach (var match in _matchBuffer)
+                _ExplodeBuffer.Add(match);
+
+            if (_ExplodeBuffer.Count > 0)
+                ExplodeTiles(_ExplodeBuffer);
         }
 
 
         public void ExplodeTiles(IEnumerable<TileManager> tilesToExplode)
         {
             foreach (var tileToExplode in tilesToExplode)
-            {
                 tileToExplode.KillToken();
-            }
         }
 
 
@@ -59,8 +65,8 @@ namespace Hudossay.Match3.Assets.Scripts
             _tiles = new TileManager[GameConfig.Width, GameConfig.Height];
             _generators = new List<TileManager>(GameConfig.Width);
             _diagonalTiles = new List<TileManager>();
-            _movingObjectCounter = new ObjectCounter();
             _matchBuffer = new(7);
+            _ExplodeBuffer = new();
 
             InitializeTiles();
 
@@ -90,7 +96,7 @@ namespace Hudossay.Match3.Assets.Scripts
                         _tiles.TryGetValue(x , y + 1, out var upperMiddleTile);
                         _tiles.TryGetValue(x + 1, y + 1, out var upperRightTile);
 
-                        tileManager.Init(position, upperLeftTile, upperMiddleTile, upperRightTile, _tokenPool, _movingObjectCounter, GameConfig);
+                        tileManager.Init(position, upperLeftTile, upperMiddleTile, upperRightTile, _tokenPool, GameConfig);
 
                         if (tileManager.IsGenerator)
                             _generators.Add(tileManager);

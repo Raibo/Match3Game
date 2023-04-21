@@ -43,7 +43,6 @@ namespace Hudossay.Match3.Assets.Scripts
         private TileManager _upperRightTile;
 
         private TokenPool _tokenPool;
-        private ObjectCounter _movingObjectsCounter;
         private List<TileManager> _diagonalWaitingList;
         private GameConfig _gameConfig;
 
@@ -53,14 +52,13 @@ namespace Hudossay.Match3.Assets.Scripts
 
 
         public void Init(Vector2Int position, TileManager upperLeftTile, TileManager upperMiddleTile, TileManager upperRightTile,
-            TokenPool tokenPool, ObjectCounter movingObjectsCounter, GameConfig gameConfig)
+            TokenPool tokenPool, GameConfig gameConfig)
         {
             Position = position;
             _upperMiddleTile = upperMiddleTile;
             _upperLeftTile = upperLeftTile;
             _upperRightTile = upperRightTile;
             _tokenPool = tokenPool;
-            _movingObjectsCounter = movingObjectsCounter;
             _diagonalWaitingList = new(2);
             _gameConfig = gameConfig;
 
@@ -124,7 +122,7 @@ namespace Hudossay.Match3.Assets.Scripts
 
                 newToken.RectTransform.anchoredPosition = RectTransform.anchoredPosition + _gameConfig.GeneratedTokensDisplacement;
 
-                newToken.Init(tokenDefinition, _movingObjectsCounter, _gameConfig);
+                newToken.Init(tokenDefinition, _gameConfig);
                 newToken.SetTravelDestination(RectTransform.anchoredPosition, false);
                 newToken.gameObject.SetActive(true);
 

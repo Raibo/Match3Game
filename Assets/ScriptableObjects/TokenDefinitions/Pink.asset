@@ -15,3 +15,4 @@ MonoBehaviour:
   Sprite: {fileID: 21300000, guid: 74e8b3592fa6a004da60e1e93d958212, type: 3}
   MatchingGroups:
   - {fileID: 11400000, guid: 5c60f8026e199b147a2d31b511471fb3, type: 2}
+  ExplosionPattern: {fileID: 0}

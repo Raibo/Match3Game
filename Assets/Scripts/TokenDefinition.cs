@@ -8,5 +8,6 @@ namespace Hudossay.Match3.Assets.Scripts
     {
         public Sprite Sprite;
         public List<MatchingGroup> MatchingGroups;
+        public ExplosionPattern ExplosionPattern;
     }
 }
