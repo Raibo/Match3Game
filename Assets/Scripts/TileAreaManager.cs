@@ -1,3 +1,5 @@
+using Hudossay.AttributeEvents.Assets.Runtime;
+using Hudossay.AttributeEvents.Assets.Runtime.Attributes;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -5,20 +7,23 @@ using UnityEngine;
 namespace Hudossay.Match3.Assets.Scripts
 {
     [RequireComponent(typeof(TokenPool))]
+    [RequireComponent(typeof(EventLinker))]
     public class TileAreaManager : MonoBehaviour
     {
         public GameConfig GameConfig;
-
-        private TileManager[,] _tiles;
-        private List<TileManager> _generators;
-        private List<TileManager> _diagonalTiles;
-        private ObjectCounter _movingObjectCounter;
 
         [Space(15)]
         [SerializeField] private Transform _tilesParent;
         [SerializeField] private RectTransform _rectTransform;
         [SerializeField] private RectTransform _parentRectTransform;
         [SerializeField] private TokenPool _tokenPool;
+        [SerializeField] private EventLinker _eventLinker;
+
+        private TileManager[,] _tiles;
+        private List<TileManager> _generators;
+        private List<TileManager> _diagonalTiles;
+        private ObjectCounter _movingObjectCounter;
+        private HashSet<TileManager> _matchBuffer;
 
 
         private void Start()
@@ -28,12 +33,22 @@ namespace Hudossay.Match3.Assets.Scripts
             TriggerTilesPull();
         }
 
+
+        [ResponseLocal(EventKind.TileSettled)]
+        public void HandleSettledTile(TileManager settledTile)
+        {
+            var matchingCross = new MatchingCross(settledTile.Position, settledTile.Token.TokenDefinition.MatchingGroups, _tiles);
+            matchingCross.GetMatchedTiles(_matchBuffer);
+        }
+
+
         private void Init()
         {
             _tiles = new TileManager[GameConfig.Width, GameConfig.Height];
             _generators = new List<TileManager>(GameConfig.Width);
             _diagonalTiles = new List<TileManager>();
             _movingObjectCounter = new ObjectCounter();
+            _matchBuffer = new(7);
 
             InitializeTiles();
 
@@ -70,6 +85,9 @@ namespace Hudossay.Match3.Assets.Scripts
 
                         if (tileManager.CanAcceptDiagonal)
                             _diagonalTiles.Add(tileManager);
+
+                        _eventLinker.StartListeningTo(tileObject);
+                        tileObject.name += tileManager.Position;
                     }
             }
         }
@@ -107,6 +125,7 @@ namespace Hudossay.Match3.Assets.Scripts
             _rectTransform = GetComponent<RectTransform>();
             _parentRectTransform = transform.parent.GetComponent<RectTransform>();
             _tokenPool = GetComponent<TokenPool>();
+            _eventLinker = GetComponent<EventLinker>();
         }
     }
 }

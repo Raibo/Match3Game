@@ -1,5 +1,12 @@
 {
   "dependencies": {
+    "com.hudossay.attribute-events": {
+      "version": "https://github.com/Raibo/AttributeEvents.git",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {},
+      "hash": "aace2cc9203d7743c3c9c6d1b5993f6564b79c86"
+    },
     "com.unity.2d.animation": {
       "version": "7.0.6",
       "depth": 1,

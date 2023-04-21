@@ -22,7 +22,7 @@ MonoBehaviour:
   GeneratedTokensDisplacement: {x: 0, y: 100}
   TokenSpeed: 800
   GenerationDelayDelta: 0.05
-  GenerationDelayMax: 0.6
+  GenerationDelayMax: 0.2
   GenerationDelayTimeout: 1
   TokenDefinitionOptions:
   - ProbabilityWeight: 1
@@ -43,8 +43,8 @@ MonoBehaviour:
   - {x: 5, y: 1}
   - {x: 5, y: 2}
   - {x: 6, y: 2}
-  - {x: 7, y: 2}
   - {x: 1, y: 5}
   - {x: 1, y: 6}
   - {x: 3, y: 5}
   - {x: 4, y: 5}
+  - {x: 7, y: 2}

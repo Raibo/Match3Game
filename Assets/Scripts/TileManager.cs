@@ -1,4 +1,7 @@
-﻿using System;
+﻿using Hudossay.AttributeEvents.Assets.Runtime;
+using Hudossay.AttributeEvents.Assets.Runtime.Attributes;
+using Hudossay.AttributeEvents.Assets.Runtime.GameEvents;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
@@ -6,6 +9,7 @@ using UnityEngine.UI;
 
 namespace Hudossay.Match3.Assets.Scripts
 {
+    [RequireComponent(typeof(EventLinker))]
     public class TileManager : MonoBehaviour
     {
         public RectTransform RectTransform;
@@ -19,7 +23,11 @@ namespace Hudossay.Match3.Assets.Scripts
         public bool IsBlocked;
         public bool CanAcceptDiagonal;
 
+        public bool IsSettled;
+
         public bool HasToken => Token != null;
+
+        [EventLocal(EventKind.TileSettled)] public GameEvent<TileManager> Settled;
 
         [Space(15)]
         public Sprite BackgroundEven;
@@ -62,9 +70,6 @@ namespace Hudossay.Match3.Assets.Scripts
 
             CanAcceptDiagonal = CheckShouldAcceptDiagonal();
 
-            if (CanAcceptDiagonal)
-                _image.color = Color.red;
-
             _streightTokenAvailabilitySource = new TaskCompletionSource<bool>();
             _diagonalTokenAvailabilitySource = new TaskCompletionSource<bool>();
 
@@ -79,14 +84,9 @@ namespace Hudossay.Match3.Assets.Scripts
                 var upperLeftFreeSpace = !_upperLeftTile?.IsBlocked ?? false;
                 var upperRightFreeSpace = !_upperRightTile?.IsBlocked ?? false;
 
-                var upperLeftTileDiagonal = _upperLeftTile?.CanAcceptDiagonal ?? false;
-                var upperMiddleTileDiagonal = _upperMiddleTile?.CanAcceptDiagonal ?? false;
-                var upperRightTileDiagonal = _upperRightTile?.CanAcceptDiagonal ?? false;
-
                 var underBlockWithSpace = upperMiddleTileBlocked && (upperLeftFreeSpace || upperRightFreeSpace);
-                var underBothDiagonal = upperLeftTileDiagonal && upperMiddleTileDiagonal && upperRightTileDiagonal;
 
-                return underBlockWithSpace || underBothDiagonal;
+                return underBlockWithSpace;
             }
         }
 
@@ -231,6 +231,13 @@ namespace Hudossay.Match3.Assets.Scripts
 
                 if (HasToken && TokenAvailableStreight.IsCompleted)
                     _diagonalTokenAvailabilitySource.SetResult(true);
+
+                if (HasToken && TokenAvailableStreight.IsCompleted)
+                {
+                    IsSettled = true;
+                    Settled.Raise(this);
+                    _image.color = Color.green;
+                }
             }
         }
 
@@ -242,6 +249,9 @@ namespace Hudossay.Match3.Assets.Scripts
 
             if (_diagonalTokenAvailabilitySource.Task.IsCompleted)
                 _diagonalTokenAvailabilitySource = new();
+
+            IsSettled = false;
+            _image.color = Color.white;
         }
 
 
