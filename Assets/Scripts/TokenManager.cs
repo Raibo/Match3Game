@@ -8,6 +8,8 @@ namespace Hudossay.Match3.Assets.Scripts
     {
         public TokenDefinition TokenDefinition;
         public RectTransform RectTransform;
+        public Poolable Poolable;
+
         public Task DestinationReach => _taskSource?.Task ?? Task.CompletedTask;
 
         [SerializeField] private Image _image;
@@ -51,6 +53,10 @@ namespace Hudossay.Match3.Assets.Scripts
         }
 
 
+        public void Kill() =>
+            Poolable.Return();
+
+
         private void MoveTowardsDestination()
         {
             if (!_isMoving)
@@ -78,6 +84,7 @@ namespace Hudossay.Match3.Assets.Scripts
         {
             _image = GetComponent<Image>();
             RectTransform = GetComponent<RectTransform>();
+            Poolable = GetComponent<Poolable>();
         }
     }
 }

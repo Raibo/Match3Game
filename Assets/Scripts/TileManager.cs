@@ -271,6 +271,20 @@ namespace Hudossay.Match3.Assets.Scripts
             _diagonalWaitingList.Count > 0 && _diagonalWaitingList[0] == waiter;
 
 
+        public async void KillToken()
+        {
+            if (!IsSettled)
+                return;
+
+            Token.Kill();
+            Token = null;
+
+            ResetTokenAvailability();
+            await Task.Yield();
+            PullTokenFromAbove();
+        }
+
+
         private void Reset()
         {
             _image = GetComponent<Image>();

@@ -39,6 +39,18 @@ namespace Hudossay.Match3.Assets.Scripts
         {
             var matchingCross = new MatchingCross(settledTile.Position, settledTile.Token.TokenDefinition.MatchingGroups, _tiles);
             matchingCross.GetMatchedTiles(_matchBuffer);
+
+            if (_matchBuffer.Count > 0)
+                ExplodeTiles(_matchBuffer);
+        }
+
+
+        public void ExplodeTiles(IEnumerable<TileManager> tilesToExplode)
+        {
+            foreach (var tileToExplode in tilesToExplode)
+            {
+                tileToExplode.KillToken();
+            }
         }
 
 
