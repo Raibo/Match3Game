@@ -139,7 +139,7 @@ namespace Hudossay.Match3.Assets.Scripts
 
                 TileManager tileToPull = null;
 
-                do
+                while (true)
                 {
                     await WhenAnyUpperTileHasToken();
 
@@ -157,8 +157,11 @@ namespace Hudossay.Match3.Assets.Scripts
                         _ => null,
                     };
 
+                    if (tileToPull != null)
+                        break;
+
                     await Task.Yield();
-                } while (tileToPull is null);
+                }
 
                 _upperLeftTile?.LeaveDiagonalWaitingList(this);
                 _upperRightTile?.LeaveDiagonalWaitingList(this);

@@ -1,0 +1,51 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8f08d8c603e952b40a3c572023b60962, type: 3}
+  m_Name: GameConfig for tests 8x8
+  m_EditorClassIdentifier: 
+  Width: 8
+  Height: 8
+  TileWidth: 100
+  TileHeight: 100
+  RegularTilePrefab: {fileID: 3083916766002513585, guid: ad17c691947255f4899527d6cf00b49a, type: 3}
+  GeneratorTilePrefab: {fileID: 3083916766002513585, guid: f1bb1b8848f8c9a43a14ee38f5d86538, type: 3}
+  BlockedTilePrefab: {fileID: 3083916766002513585, guid: 606089c0e47eb7349ae85ead370ec7c9, type: 3}
+  GeneratedTokensDisplacement: {x: 0, y: 100}
+  TokenDefinitionOptions:
+  - ProbabilityWeight: 1
+    TokenDefinition: {fileID: 11400000, guid: 9bb630f63148d144aa2555b41d89d131, type: 2}
+  - ProbabilityWeight: 1
+    TokenDefinition: {fileID: 11400000, guid: fbc25f2254f769845b227c0007c02f8d, type: 2}
+  - ProbabilityWeight: 1
+    TokenDefinition: {fileID: 11400000, guid: e3a15ad8c51340a4daa0ccdf91ca00cb, type: 2}
+  - ProbabilityWeight: 1
+    TokenDefinition: {fileID: 11400000, guid: 039b1415b0709fa458cf946389d1a483, type: 2}
+  - ProbabilityWeight: 1
+    TokenDefinition: {fileID: 11400000, guid: 07d937a6811675a44b4419956f8ae8c2, type: 2}
+  - ProbabilityWeight: 1
+    TokenDefinition: {fileID: 11400000, guid: 30e64339fba0c854ab526708c16b3915, type: 2}
+  - ProbabilityWeight: 0.5
+    TokenDefinition: {fileID: 11400000, guid: 97168062eb9acbe46bbe84b68014172b, type: 2}
+  BlockedTiles:
+  - {x: 5, y: 1}
+  - {x: 5, y: 2}
+  - {x: 6, y: 2}
+  - {x: 7, y: 2}
+  - {x: 1, y: 5}
+  - {x: 3, y: 5}
+  - {x: 2, y: 7}
+  - {x: 0, y: 7}
+  - {x: 3, y: 7}
+  - {x: 5, y: 7}
+  - {x: 6, y: 7}
+  - {x: 7, y: 7}
+  - {x: 4, y: 5}

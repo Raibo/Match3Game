@@ -10,10 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8f08d8c603e952b40a3c572023b60962, type: 3}
-  m_Name: GameConfig for tests
+  m_Name: GameConfig for tests 3
   m_EditorClassIdentifier: 
-  Width: 8
-  Height: 8
+  Width: 3
+  Height: 3
   TileWidth: 100
   TileHeight: 100
   RegularTilePrefab: {fileID: 3083916766002513585, guid: ad17c691947255f4899527d6cf00b49a, type: 3}
@@ -36,18 +36,8 @@ MonoBehaviour:
   - ProbabilityWeight: 0.5
     TokenDefinition: {fileID: 11400000, guid: 97168062eb9acbe46bbe84b68014172b, type: 2}
   BlockedTiles:
-  - {x: 5, y: 1}
-  - {x: 5, y: 2}
-  - {x: 6, y: 2}
-  - {x: 7, y: 2}
-  - {x: 1, y: 5}
-  - {x: 1, y: 6}
-  - {x: 3, y: 5}
-  - {x: 0, y: 7}
-  - {x: 1, y: 7}
-  - {x: 2, y: 7}
-  - {x: 3, y: 7}
-  - {x: 5, y: 7}
-  - {x: 6, y: 7}
-  - {x: 7, y: 7}
-  - {x: 4, y: 5}
+  - {x: 1, y: 1}
+  - {x: 2, y: 0}
+  - {x: 2, y: 2}
+  - {x: 0, y: 2}
+  - {x: 0, y: 0}

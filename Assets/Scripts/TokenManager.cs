@@ -18,7 +18,6 @@ namespace Hudossay.Match3.Assets.Scripts
         private TaskCompletionSource<bool> _taskSource;
         private bool _isMovingDiagonally;
 
-        private const float ProximityThreshold = 15f;
         private const float Speed = 700f;
         private const float DiagonalSpeedFactor = 1.42f;
 
@@ -56,26 +55,20 @@ namespace Hudossay.Match3.Assets.Scripts
                 return;
 
             var speed = _isMovingDiagonally ? Speed * DiagonalSpeedFactor : Speed;
-            var threshold = _isMovingDiagonally ? ProximityThreshold * DiagonalSpeedFactor : ProximityThreshold;
 
             var toNextDestinationVector = _destination - RectTransform.anchoredPosition;
+            var movingVector = speed * Time.deltaTime * toNextDestinationVector.normalized;
 
-            if (toNextDestinationVector.sqrMagnitude <= threshold * threshold)
+            if (movingVector.sqrMagnitude < toNextDestinationVector.sqrMagnitude)
             {
-                RectTransform.anchoredPosition = _destination;
-                _isMoving = false;
-                _movingObjectsCounter.DecreaseCount();
-                _taskSource.SetResult(true);
-
+                RectTransform.anchoredPosition += movingVector;
                 return;
             }
 
-            var movingVector = toNextDestinationVector.normalized * speed * Time.deltaTime;
-
-            if (movingVector.sqrMagnitude > toNextDestinationVector.sqrMagnitude)
-                movingVector = toNextDestinationVector;
-
-            RectTransform.anchoredPosition += movingVector;
+            RectTransform.anchoredPosition = _destination;
+            _isMoving = false;
+            _movingObjectsCounter.DecreaseCount();
+            _taskSource.SetResult(true);
         }
 
 
