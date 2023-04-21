@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UI;
@@ -35,6 +36,7 @@ namespace Hudossay.Match3.Assets.Scripts
 
         private TokenPool _tokenPool;
         private ObjectCounter _movingObjectsCounter;
+        private List<TileManager> _diagonalWaitingList;
         private GameConfig _gameConfig;
 
 
@@ -47,6 +49,7 @@ namespace Hudossay.Match3.Assets.Scripts
             _upperRightTile = upperRightTile;
             _tokenPool = tokenPool;
             _movingObjectsCounter = movingObjectsCounter;
+            _diagonalWaitingList = new(2);
             _gameConfig = gameConfig;
 
             _image.sprite = (Position.x + Position.y) % 2 == 0
@@ -131,18 +134,34 @@ namespace Hudossay.Match3.Assets.Scripts
 
             async void PullFromDiagonal()
             {
-                await WhenAnyUpperTileHasToken();
+                _upperLeftTile?.EnterDiagonalWaitingList(this);
+                _upperRightTile?.EnterDiagonalWaitingList(this);
 
-                var leftTokenAvailable = _upperLeftTile?.TokenAvailableDiagonal?.IsCompleted ?? false;
-                var rightTokenAvailable = _upperRightTile?.TokenAvailableDiagonal?.IsCompleted ?? false;
+                TileManager tileToPull = null;
 
-                var tileToPull = (leftTokenAvailable, rightTokenAvailable) switch
+                do
                 {
-                    (true, true) => UnityEngine.Random.Range(0, 2) > 0 ? _upperLeftTile : _upperRightTile,
-                    (true, false) => _upperLeftTile,
-                    (false, true) => _upperRightTile,
-                    _ => throw new Exception($"Error during diagonal pull upper tile selection in tile {Position}"),
-                };
+                    await WhenAnyUpperTileHasToken();
+
+                    var leftTokenAvailable = _upperLeftTile && _upperLeftTile.TokenAvailableDiagonal.IsCompleted &&
+                        _upperLeftTile.IsFirstInDiagonalWaitingList(this);
+
+                    var rightTokenAvailable = _upperRightTile && _upperRightTile.TokenAvailableDiagonal.IsCompleted &&
+                        _upperRightTile.IsFirstInDiagonalWaitingList(this);
+
+                    tileToPull = (leftTokenAvailable, rightTokenAvailable) switch
+                    {
+                        (true, true) => UnityEngine.Random.Range(0, 2) > 0 ? _upperLeftTile : _upperRightTile,
+                        (true, false) => _upperLeftTile,
+                        (false, true) => _upperRightTile,
+                        _ => null,
+                    };
+
+                    await Task.Yield();
+                } while (tileToPull is null);
+
+                _upperLeftTile?.LeaveDiagonalWaitingList(this);
+                _upperRightTile?.LeaveDiagonalWaitingList(this);
 
                 TakeTokenFrom(tileToPull, isDiagonal: true);
             }
@@ -191,6 +210,22 @@ namespace Hudossay.Match3.Assets.Scripts
             if (_diagonalTokenAvailabilitySource.Task.IsCompleted)
                 _diagonalTokenAvailabilitySource = new();
         }
+
+
+        public void EnterDiagonalWaitingList(TileManager waiter)
+        {
+            _diagonalWaitingList.Add(waiter);
+
+            if (_diagonalWaitingList.Count == 2 && UnityEngine.Random.Range(0, 2) > 0)
+                (_diagonalWaitingList[0], _diagonalWaitingList[1]) = (_diagonalWaitingList[1], _diagonalWaitingList[0]);
+        }
+
+
+        public void LeaveDiagonalWaitingList(TileManager waiter) =>
+            _diagonalWaitingList.Remove(waiter);
+
+        public bool IsFirstInDiagonalWaitingList(TileManager waiter) =>
+            _diagonalWaitingList.Count > 0 && _diagonalWaitingList[0] == waiter;
 
 
         private void Reset()
