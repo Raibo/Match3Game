@@ -256,7 +256,7 @@ GameObject:
   - component: {fileID: 1383910775}
   - component: {fileID: 1383910776}
   m_Layer: 5
-  m_Name: TileArea
+  m_Name: GameBoard
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
