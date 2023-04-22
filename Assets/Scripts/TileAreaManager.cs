@@ -87,6 +87,11 @@ namespace Hudossay.Match3.Assets.Scripts
             _selectedTile = newSelected;
 
 
+        [ResponseLocal(TileEventKind.Unselected)]
+        public void UpdateUnselectedTile() =>
+            _selectedTile = null;
+
+
         [ResponseLocal(TileEventKind.DragBegin)]
         public void OnDragBegin(TileManager draggedTile)
         {
@@ -112,7 +117,7 @@ namespace Hudossay.Match3.Assets.Scripts
         {
             _dragImageObject.SetActive(false);
 
-            if (draggedTile != _selectedTile)
+            if (_selectedTile is not null && draggedTile != _selectedTile)
                 draggedTile.SwapTokensWith(_selectedTile);
         }
 
@@ -150,7 +155,7 @@ namespace Hudossay.Match3.Assets.Scripts
                         rectTroansform.anchoredPosition = rectPosition;
 
                         _tiles.TryGetValue(x - 1, y + 1, out var upperLeftTile);
-                        _tiles.TryGetValue(x , y + 1, out var upperMiddleTile);
+                        _tiles.TryGetValue(x, y + 1, out var upperMiddleTile);
                         _tiles.TryGetValue(x + 1, y + 1, out var upperRightTile);
 
                         tileManager.Init(position, upperLeftTile, upperMiddleTile, upperRightTile, _tokenPool, GameConfig);

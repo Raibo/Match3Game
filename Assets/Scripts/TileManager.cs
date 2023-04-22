@@ -11,7 +11,8 @@ using UnityEngine.UI;
 namespace Hudossay.Match3.Assets.Scripts
 {
     [RequireComponent(typeof(EventLinker))]
-    public class TileManager : MonoBehaviour, IPointerClickHandler, IBeginDragHandler, IEndDragHandler, IDragHandler, IPointerEnterHandler
+    public class TileManager : MonoBehaviour, IPointerClickHandler, IBeginDragHandler, IEndDragHandler, IDragHandler, IPointerEnterHandler,
+        IPointerExitHandler
     {
         public RectTransform RectTransform;
         public TokenManager Token;
@@ -32,6 +33,7 @@ namespace Hudossay.Match3.Assets.Scripts
         [EventLocal(TileEventKind.DragBegin)] public GameEvent<TileManager> DragBegin;
         [EventLocal(TileEventKind.DragEnd)] public GameEvent<TileManager> DragEnd;
         [EventLocal(TileEventKind.Selected)] public GameEvent<TileManager> Selected;
+        [EventLocal(TileEventKind.Unselected)] public GameEvent Unselected;
         [EventLocal(TileEventKind.ClickedLeft)] public GameEvent<TileManager> ClickedLeft;
         [EventLocal(TileEventKind.ClickedRight)] public GameEvent<TileManager> ClickedRight;
         [EventLocal(TileEventKind.DragFrame)] public GameEvent<PointerEventData> DragFrame;
@@ -330,6 +332,9 @@ namespace Hudossay.Match3.Assets.Scripts
 
         public void OnPointerEnter(PointerEventData eventData) =>
             Selected.Raise(this);
+
+        public void OnPointerExit(PointerEventData eventData) =>
+            Unselected.Raise();
 
 
         private void Reset()
