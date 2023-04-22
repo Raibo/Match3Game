@@ -1,4 +1,5 @@
 ﻿using Hudossay.Match3.Assets.Scripts.ScriptableObjects;
+using System;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UI;
@@ -9,6 +10,7 @@ namespace Hudossay.Match3.Assets.Scripts.MonoBehaviours
     {
         public TokenDefinition TokenDefinition;
         public RectTransform RectTransform;
+        public Animator Animator;
         public Poolable Poolable;
 
         public Task DestinationReach => _taskSource?.Task ?? Task.CompletedTask;
@@ -49,8 +51,14 @@ namespace Hudossay.Match3.Assets.Scripts.MonoBehaviours
         }
 
 
-        public void Kill() =>
+        public async Task Kill()
+        {
+            Animator.SetTrigger(TokenDefinition.DeathAnimationTrigger);
+            await Task.Delay(TimeSpan.FromSeconds(TokenDefinition.DeathDelaySeconds));
+
+            Animator.SetTrigger(TokenDefinition.ResetAnimationTrigger);
             Poolable.Return();
+        }
 
 
         private void MoveTowardsDestination()

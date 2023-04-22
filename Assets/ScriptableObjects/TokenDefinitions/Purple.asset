@@ -16,3 +16,6 @@ MonoBehaviour:
   MatchingGroups:
   - {fileID: 11400000, guid: ba1a038f830815f4fb11955550e8cd01, type: 2}
   ExplosionPattern: {fileID: 0}
+  DeathAnimationTrigger: Pop
+  ResetAnimationTrigger: Reset
+  DeathDelaySeconds: 0.3

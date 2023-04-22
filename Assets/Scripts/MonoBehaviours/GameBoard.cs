@@ -5,6 +5,7 @@ using Hudossay.Match3.Assets.Scripts.ScriptableObjects;
 using Hudossay.Match3.Assets.Scripts.SupportStructures;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -62,16 +63,8 @@ namespace Hudossay.Match3.Assets.Scripts.MonoBehaviours
             var matchingCross = new MatchingCross(settledTile.Position, settledTile.Token.TokenDefinition.MatchingGroups, _tiles);
             matchingCross.GetMatchedTiles(_matchBuffer);
 
-            _ExplodeBuffer.Clear();
-
             foreach (var match in _matchBuffer)
-                match.Token.TokenDefinition.ExplosionPattern?.AddTilesToExplode(match.Position, _tiles, _ExplodeBuffer);
-
-            foreach (var match in _matchBuffer)
-                _ExplodeBuffer.Add(match);
-
-            foreach (var tileToExplode in _ExplodeBuffer)
-                tileToExplode.KillToken();
+                KillTokenInTile(match);
         }
 
 
@@ -82,7 +75,7 @@ namespace Hudossay.Match3.Assets.Scripts.MonoBehaviours
             GameConfig.OnClickExplosion?.AddTilesToExplode(target.Position, _tiles, _ExplodeBuffer);
 
             foreach (var tileToExplode in _ExplodeBuffer)
-                tileToExplode.KillToken();
+                KillTokenInTile(tileToExplode);
         }
 
 
@@ -123,6 +116,24 @@ namespace Hudossay.Match3.Assets.Scripts.MonoBehaviours
 
             if (_selectedTile is not null && draggedTile != _selectedTile)
                 draggedTile.SwapTokensWith(_selectedTile);
+        }
+
+
+        private async void KillTokenInTile(Tile tileToKill)
+        {
+            if (!tileToKill.IsSettled)
+                return;
+
+            var explosionPattern = tileToKill.Token.TokenDefinition.ExplosionPattern;
+
+            _ = tileToKill.KillToken();
+            await Task.Yield();
+
+            _ExplodeBuffer.Clear();
+            explosionPattern?.AddTilesToExplode(tileToKill.Position, _tiles, _ExplodeBuffer);
+
+            foreach (var chainExplosionTile in _ExplodeBuffer)
+                KillTokenInTile(chainExplosionTile);
         }
 
 

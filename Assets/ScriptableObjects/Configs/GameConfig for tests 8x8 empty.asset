@@ -38,6 +38,6 @@ MonoBehaviour:
     TokenDefinition: {fileID: 11400000, guid: 07d937a6811675a44b4419956f8ae8c2, type: 2}
   - ProbabilityWeight: 1
     TokenDefinition: {fileID: 11400000, guid: 30e64339fba0c854ab526708c16b3915, type: 2}
-  - ProbabilityWeight: 0.5
+  - ProbabilityWeight: 1
     TokenDefinition: {fileID: 11400000, guid: 97168062eb9acbe46bbe84b68014172b, type: 2}
   BlockedTiles: []

@@ -297,16 +297,16 @@ namespace Hudossay.Match3.Assets.Scripts.MonoBehaviours
             _diagonalWaitingList.Count > 0 && _diagonalWaitingList[0] == waiter;
 
 
-        public async void KillToken()
+        public async Task KillToken()
         {
             if (!IsSettled)
                 return;
 
-            Token.Kill();
+            var token = Token;
             Token = null;
-
             ResetTokenAvailability();
-            await Task.Yield();
+
+            await token.Kill();
             PullTokenFromAbove();
         }
 

@@ -15,3 +15,7 @@ MonoBehaviour:
   Sprite: {fileID: 21300000, guid: 145e1a5e1f1b138429e2c935d24a149f, type: 3}
   MatchingGroups:
   - {fileID: 11400000, guid: 2be76d9e36b533d4d89d17952305b46b, type: 2}
+  ExplosionPattern: {fileID: 0}
+  DeathAnimationTrigger: Pop
+  ResetAnimationTrigger: Reset
+  DeathDelaySeconds: 0.3

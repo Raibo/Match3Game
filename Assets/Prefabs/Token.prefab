@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 428534687893592761}
   - component: {fileID: 4099736705434958281}
   - component: {fileID: 7008523471444191929}
+  - component: {fileID: 8222193451017863111}
   m_Layer: 5
   m_Name: Token
   m_TagString: Untagged
@@ -92,6 +93,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   TokenDefinition: {fileID: 0}
   RectTransform: {fileID: 428534687893592762}
+  Animator: {fileID: 8222193451017863111}
   Poolable: {fileID: 7008523471444191929}
   _image: {fileID: 428534687893592761}
 --- !u!114 &7008523471444191929
@@ -107,3 +109,23 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Pool: {fileID: 0}
+--- !u!95 &8222193451017863111
+Animator:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 428534687893592763}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: fc0d2b34af0e60644a853b449322937d, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0

@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8ad45335f338abd4db36d2efbc0ea7ba, type: 3}
-  m_Name: Universal
+  m_Name: Bomb
   m_EditorClassIdentifier: 
   Sprite: {fileID: 21300000, guid: 0a05731874dc361499ad7a72b57eda40, type: 3}
   MatchingGroups:
@@ -21,3 +21,6 @@ MonoBehaviour:
   - {fileID: 11400000, guid: b096a5cb2d28a3449975e287afa242f4, type: 2}
   - {fileID: 11400000, guid: 2be76d9e36b533d4d89d17952305b46b, type: 2}
   ExplosionPattern: {fileID: 11400000, guid: 78483dc270efa1e4aa80d704a47cd14a, type: 2}
+  DeathAnimationTrigger: Explode
+  ResetAnimationTrigger: Reset
+  DeathDelaySeconds: 0.3

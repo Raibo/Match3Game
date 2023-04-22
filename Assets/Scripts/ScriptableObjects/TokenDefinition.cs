@@ -9,5 +9,8 @@ namespace Hudossay.Match3.Assets.Scripts.ScriptableObjects
         public Sprite Sprite;
         public List<MatchingGroup> MatchingGroups;
         public ExplosionPattern ExplosionPattern;
+        public string DeathAnimationTrigger;
+        public string ResetAnimationTrigger;
+        public float DeathDelaySeconds;
     }
 }
