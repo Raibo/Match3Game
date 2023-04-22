@@ -39,6 +39,14 @@ namespace Hudossay.Match3.Assets.Scripts.ScriptableObjects
 
             TileWidth = 100f;
             TileHeight = 100f;
+
+            TokenSpeed = 800f;
+            GenerationDelayDelta = 0.05f;
+            GenerationDelayMax = 0.2f;
+            GenerationDelayTimeout = 1f;
+
+            TokenDefinitionOptions = new();
+            BlockedTiles = new();
         }
     }
 }

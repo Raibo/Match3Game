@@ -6,11 +6,11 @@ using UnityEngine;
 
 namespace Hudossay.Match3.Assets.Scripts.SupportStructures
 {
-    public struct MatchingCross
+    public readonly struct MatchingCross
     {
-        private Vector2Int _center;
-        private List<MatchingGroup> _matchingGroups;
-        private Tile[,] _tiles;
+        private readonly Vector2Int _center;
+        private readonly List<MatchingGroup> _matchingGroups;
+        private readonly Tile[,] _tiles;
 
         private const int MaximumSearchDistance = 2;
         private const int MinimumNeighbouringMetches = 2;
@@ -72,12 +72,12 @@ namespace Hudossay.Match3.Assets.Scripts.SupportStructures
         {
             int length = 0;
 
-            for (int i = 1; i <= MaximumSearchDistance; i++)
+            for (int distance = 1; distance <= MaximumSearchDistance; distance++)
             {
-                if (CheckTileHasGroup(_center + direction * i, matchingGroup))
-                    length++;
-                else
+                if (!CheckTileHasGroup(_center + direction * distance, matchingGroup))
                     break;
+
+                length++;
             }
 
             return length;

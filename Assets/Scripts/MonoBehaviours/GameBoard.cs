@@ -32,8 +32,6 @@ namespace Hudossay.Match3.Assets.Scripts.MonoBehaviours
         [SerializeField] private Image _dragImageImage;
 
         private Tile[,] _tiles;
-        private List<Tile> _generators;
-        private List<Tile> _diagonalTiles;
         private HashSet<Tile> _matchBuffer;
         private HashSet<Tile> _ExplodeBuffer;
 
@@ -141,8 +139,6 @@ namespace Hudossay.Match3.Assets.Scripts.MonoBehaviours
         private void Init()
         {
             _tiles = new Tile[GameConfig.Width, GameConfig.Height];
-            _generators = new List<Tile>(GameConfig.Width);
-            _diagonalTiles = new List<Tile>();
             _matchBuffer = new(7);
             _ExplodeBuffer = new();
 
@@ -155,6 +151,7 @@ namespace Hudossay.Match3.Assets.Scripts.MonoBehaviours
                     for (int x = 0; x < GameConfig.Width; x++)
                     {
                         var position = new Vector2Int(x, y);
+
                         var prefab = position switch
                         {
                             _ when GameConfig.BlockedTiles.Contains(position) => GameConfig.BlockedTilePrefab,
@@ -163,27 +160,20 @@ namespace Hudossay.Match3.Assets.Scripts.MonoBehaviours
                         };
 
                         var tileObject = Instantiate(prefab, _tilesParent);
-                        var tileManager = tileObject.GetComponent<Tile>();
-                        _tiles[x, y] = tileManager;
+                        var tile = tileObject.GetComponent<Tile>();
+                        _tiles[x, y] = tile;
 
-                        var rectTroansform = tileObject.GetComponent<RectTransform>();
                         var rectPosition = new Vector2((x + 0.5f) * GameConfig.TileWidth, (y + 0.5f) * GameConfig.TileHeight);
-                        rectTroansform.anchoredPosition = rectPosition;
+                        tile.RectTransform.anchoredPosition = rectPosition;
 
                         _tiles.TryGetValue(x - 1, y + 1, out var upperLeftTile);
                         _tiles.TryGetValue(x, y + 1, out var upperMiddleTile);
                         _tiles.TryGetValue(x + 1, y + 1, out var upperRightTile);
 
-                        tileManager.Init(position, upperLeftTile, upperMiddleTile, upperRightTile, _tokenPool, GameConfig);
-
-                        if (tileManager.IsGenerator)
-                            _generators.Add(tileManager);
-
-                        if (tileManager.CanAcceptDiagonal)
-                            _diagonalTiles.Add(tileManager);
+                        tile.Init(position, upperLeftTile, upperMiddleTile, upperRightTile, _tokenPool, GameConfig);
 
                         _eventLinker.StartListeningTo(tileObject);
-                        tileObject.name += tileManager.Position;
+                        tileObject.name += tile.Position;
                     }
             }
         }
@@ -207,15 +197,15 @@ namespace Hudossay.Match3.Assets.Scripts.MonoBehaviours
             var newSizeDelta = new Vector2(GameConfig.Width * GameConfig.TileWidth, GameConfig.Height * GameConfig.TileHeight);
 
             var minimumParentDimension = Math.Min(parentSize.x, parentSize.y);
-            var maximumAreaDimansion = Mathf.Max(newSizeDelta.x, newSizeDelta.y);
-            var scale = minimumParentDimension / maximumAreaDimansion;
-            var newScaleVEctor = new Vector3(scale, scale, scale);
+            var maximumBoardDimansion = Mathf.Max(newSizeDelta.x, newSizeDelta.y);
+            var scale = minimumParentDimension / maximumBoardDimansion;
+            var newScale = new Vector3(scale, scale, scale);
 
-            if (_rectTransform.sizeDelta != newSizeDelta || _rectTransform.localScale != newScaleVEctor)
-            {
-                _rectTransform.sizeDelta = newSizeDelta;
-                _rectTransform.localScale = newScaleVEctor;
-            }
+            if (_rectTransform.sizeDelta == newSizeDelta && _rectTransform.localScale == newScale)
+                return;
+
+            _rectTransform.sizeDelta = newSizeDelta;
+            _rectTransform.localScale = newScale;
         }
 
 

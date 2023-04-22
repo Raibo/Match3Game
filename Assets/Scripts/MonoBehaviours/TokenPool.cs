@@ -8,13 +8,13 @@ namespace Hudossay.Match3.Assets.Scripts.MonoBehaviours
         public GameObject Prefab;
         public int MinimumCapacity;
 
-        private Stack<Token> _elements;
         [SerializeField] private Transform _transform;
+        private Stack<Token> _elements;
 
 
         private void Awake()
         {
-            _elements = new Stack<Token>(MinimumCapacity);
+            _elements = new(MinimumCapacity);
 
             for (int i = 0; i < MinimumCapacity; i++)
                 _elements.Push(CreateNewElement());
@@ -24,12 +24,12 @@ namespace Hudossay.Match3.Assets.Scripts.MonoBehaviours
         private Token CreateNewElement()
         {
             var newObj = Instantiate(Prefab, _transform);
-            var tokenManager = newObj.GetComponent<Token>();
+            var token = newObj.GetComponent<Token>();
 
-            newObj.GetComponent<Poolable>().Init(this, tokenManager);
+            newObj.GetComponent<Poolable>().Init(this, token);
             newObj.SetActive(false);
 
-            return tokenManager;
+            return token;
         }
 
 

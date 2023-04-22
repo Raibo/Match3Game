@@ -8,7 +8,7 @@ namespace Hudossay.Match3.Assets.Scripts.Extensions
     {
         public static bool TryGetValue<T>(this T[,] array, int x, int y, out T value)
         {
-            if (x < 0 || y < 0 || x > array.GetLength(0) - 1 || y > array.GetLength(1) - 1)
+            if (x < 0 || y < 0 || x >= array.GetLength(0) || y >= array.GetLength(1))
             {
                 value = default;
                 return false;

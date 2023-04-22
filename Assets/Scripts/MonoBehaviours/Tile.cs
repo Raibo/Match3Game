@@ -24,13 +24,19 @@ namespace Hudossay.Match3.Assets.Scripts.MonoBehaviours
         public Task TokenAvailableStreight => _streightTokenAvailabilitySource.Task;
         public Task TokenAvailableDiagonal => _diagonalTokenAvailabilitySource.Task;
 
+        [Space(15)]
         public bool IsGenerator;
         public bool IsBlocked;
         public bool CanAcceptDiagonal;
 
+        [Space(15)]
         public bool IsSettled;
 
         public bool HasToken => Token != null;
+
+        [Space(15)]
+        public Sprite BackgroundEven;
+        public Sprite BackgroundOdd;
 
         [EventLocal(TileEventKind.Settled)] public GameEvent<Tile> Settled;
         [EventLocal(TileEventKind.DragBegin)] public GameEvent<Tile> DragBegin;
@@ -40,10 +46,6 @@ namespace Hudossay.Match3.Assets.Scripts.MonoBehaviours
         [EventLocal(TileEventKind.ClickedLeft)] public GameEvent<Tile> ClickedLeft;
         [EventLocal(TileEventKind.ClickedRight)] public GameEvent<Tile> ClickedRight;
         [EventLocal(TileEventKind.DragFrame)] public GameEvent<PointerEventData> DragFrame;
-
-        [Space(15)]
-        public Sprite BackgroundEven;
-        public Sprite BackgroundOdd;
 
         [SerializeField] private Image _image;
 
@@ -80,8 +82,8 @@ namespace Hudossay.Match3.Assets.Scripts.MonoBehaviours
 
             CanAcceptDiagonal = CheckShouldAcceptDiagonal();
 
-            _streightTokenAvailabilitySource = new TaskCompletionSource<bool>();
-            _diagonalTokenAvailabilitySource = new TaskCompletionSource<bool>();
+            _streightTokenAvailabilitySource = new();
+            _diagonalTokenAvailabilitySource = new();
 
 
             bool CheckShouldAcceptDiagonal()
@@ -292,6 +294,7 @@ namespace Hudossay.Match3.Assets.Scripts.MonoBehaviours
 
         public void LeaveDiagonalWaitingList(Tile waiter) =>
             _diagonalWaitingList.Remove(waiter);
+
 
         public bool IsFirstInDiagonalWaitingList(Tile waiter) =>
             _diagonalWaitingList.Count > 0 && _diagonalWaitingList[0] == waiter;
