@@ -5,6 +5,7 @@ using Hudossay.Match3.Assets.Scripts.ScriptableObjects;
 using Hudossay.Match3.Assets.Scripts.SupportStructures;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -190,7 +191,10 @@ namespace Hudossay.Match3.Assets.Scripts.MonoBehaviours
 
         private void TriggerTilesPull()
         {
-            for (int x = 0; x < GameConfig.Width; x++)
+            var randomRange = Enumerable.Range(0, GameConfig.Width)
+                .OrderBy(x => UnityEngine.Random.Range(0f, 1f));
+
+            foreach (var x in randomRange)
                 for (int y = 0; y < GameConfig.Height; y++)
                     _tiles[x, y].PullTokenFromAbove();
         }
