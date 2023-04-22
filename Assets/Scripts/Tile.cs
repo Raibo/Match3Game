@@ -11,11 +11,11 @@ using UnityEngine.UI;
 namespace Hudossay.Match3.Assets.Scripts
 {
     [RequireComponent(typeof(EventLinker))]
-    public class TileManager : MonoBehaviour, IPointerClickHandler, IBeginDragHandler, IEndDragHandler, IDragHandler, IPointerEnterHandler,
+    public class Tile : MonoBehaviour, IPointerClickHandler, IBeginDragHandler, IEndDragHandler, IDragHandler, IPointerEnterHandler,
         IPointerExitHandler
     {
         public RectTransform RectTransform;
-        public TokenManager Token;
+        public Token Token;
         public Vector2Int Position;
 
         public Task TokenAvailableStreight => _streightTokenAvailabilitySource.Task;
@@ -29,13 +29,13 @@ namespace Hudossay.Match3.Assets.Scripts
 
         public bool HasToken => Token != null;
 
-        [EventLocal(TileEventKind.Settled)] public GameEvent<TileManager> Settled;
-        [EventLocal(TileEventKind.DragBegin)] public GameEvent<TileManager> DragBegin;
-        [EventLocal(TileEventKind.DragEnd)] public GameEvent<TileManager> DragEnd;
-        [EventLocal(TileEventKind.Selected)] public GameEvent<TileManager> Selected;
+        [EventLocal(TileEventKind.Settled)] public GameEvent<Tile> Settled;
+        [EventLocal(TileEventKind.DragBegin)] public GameEvent<Tile> DragBegin;
+        [EventLocal(TileEventKind.DragEnd)] public GameEvent<Tile> DragEnd;
+        [EventLocal(TileEventKind.Selected)] public GameEvent<Tile> Selected;
         [EventLocal(TileEventKind.Unselected)] public GameEvent Unselected;
-        [EventLocal(TileEventKind.ClickedLeft)] public GameEvent<TileManager> ClickedLeft;
-        [EventLocal(TileEventKind.ClickedRight)] public GameEvent<TileManager> ClickedRight;
+        [EventLocal(TileEventKind.ClickedLeft)] public GameEvent<Tile> ClickedLeft;
+        [EventLocal(TileEventKind.ClickedRight)] public GameEvent<Tile> ClickedRight;
         [EventLocal(TileEventKind.DragFrame)] public GameEvent<PointerEventData> DragFrame;
 
         [Space(15)]
@@ -47,12 +47,12 @@ namespace Hudossay.Match3.Assets.Scripts
         private TaskCompletionSource<bool> _streightTokenAvailabilitySource;
         private TaskCompletionSource<bool> _diagonalTokenAvailabilitySource;
 
-        private TileManager _upperLeftTile;
-        private TileManager _upperMiddleTile;
-        private TileManager _upperRightTile;
+        private Tile _upperLeftTile;
+        private Tile _upperMiddleTile;
+        private Tile _upperRightTile;
 
         private TokenPool _tokenPool;
-        private List<TileManager> _diagonalWaitingList;
+        private List<Tile> _diagonalWaitingList;
         private GameConfig _gameConfig;
 
         private bool _isCurrentlyPulling;
@@ -60,7 +60,7 @@ namespace Hudossay.Match3.Assets.Scripts
         private float _lastTimeGenerated;
 
 
-        public void Init(Vector2Int position, TileManager upperLeftTile, TileManager upperMiddleTile, TileManager upperRightTile,
+        public void Init(Vector2Int position, Tile upperLeftTile, Tile upperMiddleTile, Tile upperRightTile,
             TokenPool tokenPool, GameConfig gameConfig)
         {
             Position = position;
@@ -174,7 +174,7 @@ namespace Hudossay.Match3.Assets.Scripts
                 _upperLeftTile?.EnterDiagonalWaitingList(this);
                 _upperRightTile?.EnterDiagonalWaitingList(this);
 
-                TileManager tileToPull = null;
+                Tile tileToPull = null;
 
                 while (true)
                 {
@@ -217,7 +217,7 @@ namespace Hudossay.Match3.Assets.Scripts
                 };
 
 
-            void TakeTokenFrom(TileManager tileToPullFrom, bool isDiagonal)
+            void TakeTokenFrom(Tile tileToPullFrom, bool isDiagonal)
             {
                 Token = tileToPullFrom.Token;
 
@@ -231,7 +231,7 @@ namespace Hudossay.Match3.Assets.Scripts
         }
 
 
-        public void SwapTokensWith(TileManager tileToSwap)
+        public void SwapTokensWith(Tile tileToSwap)
         {
             if (!IsSettled || !tileToSwap.IsSettled)
                 return;
@@ -278,7 +278,7 @@ namespace Hudossay.Match3.Assets.Scripts
         }
 
 
-        public void EnterDiagonalWaitingList(TileManager waiter)
+        public void EnterDiagonalWaitingList(Tile waiter)
         {
             _diagonalWaitingList.Add(waiter);
 
@@ -287,10 +287,10 @@ namespace Hudossay.Match3.Assets.Scripts
         }
 
 
-        public void LeaveDiagonalWaitingList(TileManager waiter) =>
+        public void LeaveDiagonalWaitingList(Tile waiter) =>
             _diagonalWaitingList.Remove(waiter);
 
-        public bool IsFirstInDiagonalWaitingList(TileManager waiter) =>
+        public bool IsFirstInDiagonalWaitingList(Tile waiter) =>
             _diagonalWaitingList.Count > 0 && _diagonalWaitingList[0] == waiter;
 
 

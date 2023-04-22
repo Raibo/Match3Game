@@ -9,7 +9,7 @@ namespace Hudossay.Match3.Assets.Scripts
         public List<Vector2Int> ExplosionPoints;
 
 
-        public void AddTilesToExplode(Vector2Int center, TileManager[,] tiles, HashSet<TileManager> pointsBuffer)
+        public void AddTilesToExplode(Vector2Int center, Tile[,] tiles, HashSet<Tile> pointsBuffer)
         {
             for (int pointIndex = 0; pointIndex < ExplosionPoints.Count; pointIndex++)
             {

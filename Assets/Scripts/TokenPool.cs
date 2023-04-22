@@ -8,23 +8,23 @@ namespace Hudossay.Match3.Assets.Scripts
         public GameObject Prefab;
         public int MinimumCapacity;
 
-        private Stack<TokenManager> _elements;
+        private Stack<Token> _elements;
         [SerializeField] private Transform _transform;
 
 
         private void Awake()
         {
-            _elements = new Stack<TokenManager>(MinimumCapacity);
+            _elements = new Stack<Token>(MinimumCapacity);
 
             for (int i = 0; i < MinimumCapacity; i++)
                 _elements.Push(CreateNewElement());
         }
 
 
-        private TokenManager CreateNewElement()
+        private Token CreateNewElement()
         {
             var newObj = Instantiate(Prefab, _transform);
-            var tokenManager = newObj.GetComponent<TokenManager>();
+            var tokenManager = newObj.GetComponent<Token>();
 
             newObj.GetComponent<Poolable>().Init(this, tokenManager);
             newObj.SetActive(false);
@@ -33,7 +33,7 @@ namespace Hudossay.Match3.Assets.Scripts
         }
 
 
-        public TokenManager Rent()
+        public Token Rent()
         {
             if (_elements.Count <= 0)
                 _elements.Push(CreateNewElement());
@@ -42,7 +42,7 @@ namespace Hudossay.Match3.Assets.Scripts
         }
 
 
-        public void Return(TokenManager element)
+        public void Return(Token element)
         {
             element.gameObject.SetActive(false);
             _elements.Push(element);

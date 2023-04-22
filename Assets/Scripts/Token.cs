@@ -4,7 +4,7 @@ using UnityEngine.UI;
 
 namespace Hudossay.Match3.Assets.Scripts
 {
-    public class TokenManager : MonoBehaviour
+    public class Token : MonoBehaviour
     {
         public TokenDefinition TokenDefinition;
         public RectTransform RectTransform;

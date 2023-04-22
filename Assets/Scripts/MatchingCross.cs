@@ -7,13 +7,13 @@ namespace Hudossay.Match3.Assets.Scripts
     {
         private Vector2Int _center;
         private List<MatchingGroup> _matchingGroups;
-        private TileManager[,] _tiles;
+        private Tile[,] _tiles;
 
         private const int MaximumSearchDistance = 2;
         private const int MinimumNeighbouringMetches = 2;
 
 
-        public MatchingCross(Vector2Int center, List<MatchingGroup> matchingGroups, TileManager[,] tiles)
+        public MatchingCross(Vector2Int center, List<MatchingGroup> matchingGroups, Tile[,] tiles)
         {
             _center = center;
             _matchingGroups = matchingGroups;
@@ -21,7 +21,7 @@ namespace Hudossay.Match3.Assets.Scripts
         }
 
 
-        public void GetMatchedTiles(HashSet<TileManager> tilesBuffer)
+        public void GetMatchedTiles(HashSet<Tile> tilesBuffer)
         {
             tilesBuffer.Clear();
 
@@ -30,7 +30,7 @@ namespace Hudossay.Match3.Assets.Scripts
         }
 
 
-        private void AddMetchesForGroup(MatchingGroup matchingGroup, HashSet<TileManager> matchBuffer)
+        private void AddMetchesForGroup(MatchingGroup matchingGroup, HashSet<Tile> matchBuffer)
         {
             var leftVector = new Vector2Int(-1, 0);
             var rightVector = new Vector2Int(1, 0);

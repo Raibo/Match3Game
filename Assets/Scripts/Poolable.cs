@@ -5,10 +5,10 @@ namespace Hudossay.Match3.Assets.Scripts
     public class Poolable : MonoBehaviour
     {
         public TokenPool Pool;
-        private TokenManager _tokenManager;
+        private Token _tokenManager;
 
 
-        public void Init(TokenPool pool, TokenManager tokenManager)
+        public void Init(TokenPool pool, Token tokenManager)
         {
             _tokenManager = tokenManager;
             Pool = pool;

@@ -10,7 +10,7 @@ namespace Hudossay.Match3.Assets.Scripts
 {
     [RequireComponent(typeof(TokenPool))]
     [RequireComponent(typeof(EventLinker))]
-    public class TileAreaManager : MonoBehaviour
+    public class GameBoard : MonoBehaviour
     {
         public GameConfig GameConfig;
 
@@ -25,13 +25,13 @@ namespace Hudossay.Match3.Assets.Scripts
         [SerializeField] private Image _dragImageImage;
         [SerializeField] private GameObject _dragImageObject;
 
-        private TileManager[,] _tiles;
-        private List<TileManager> _generators;
-        private List<TileManager> _diagonalTiles;
-        private HashSet<TileManager> _matchBuffer;
-        private HashSet<TileManager> _ExplodeBuffer;
+        private Tile[,] _tiles;
+        private List<Tile> _generators;
+        private List<Tile> _diagonalTiles;
+        private HashSet<Tile> _matchBuffer;
+        private HashSet<Tile> _ExplodeBuffer;
 
-        private TileManager _selectedTile;
+        private Tile _selectedTile;
         private bool _triggeredPull;
 
 
@@ -53,7 +53,7 @@ namespace Hudossay.Match3.Assets.Scripts
 
 
         [ResponseLocal(TileEventKind.Settled)]
-        public void HandleSettledTile(TileManager settledTile)
+        public void HandleSettledTile(Tile settledTile)
         {
             var matchingCross = new MatchingCross(settledTile.Position, settledTile.Token.TokenDefinition.MatchingGroups, _tiles);
             matchingCross.GetMatchedTiles(_matchBuffer);
@@ -72,7 +72,7 @@ namespace Hudossay.Match3.Assets.Scripts
 
 
         [ResponseLocal(TileEventKind.ClickedRight)]
-        public void ApplyExplosion(TileManager target)
+        public void ApplyExplosion(Tile target)
         {
             _ExplodeBuffer.Clear();
             GameConfig.OnClickExplosion?.AddTilesToExplode(target.Position, _tiles, _ExplodeBuffer);
@@ -83,7 +83,7 @@ namespace Hudossay.Match3.Assets.Scripts
 
 
         [ResponseLocal(TileEventKind.Selected)]
-        public void UpdateSelectedTile(TileManager newSelected) =>
+        public void UpdateSelectedTile(Tile newSelected) =>
             _selectedTile = newSelected;
 
 
@@ -93,7 +93,7 @@ namespace Hudossay.Match3.Assets.Scripts
 
 
         [ResponseLocal(TileEventKind.DragBegin)]
-        public void OnDragBegin(TileManager draggedTile)
+        public void OnDragBegin(Tile draggedTile)
         {
             if (!draggedTile.IsSettled)
                 return;
@@ -113,7 +113,7 @@ namespace Hudossay.Match3.Assets.Scripts
 
 
         [ResponseLocal(TileEventKind.DragEnd)]
-        public void OnDragEnd(TileManager draggedTile)
+        public void OnDragEnd(Tile draggedTile)
         {
             _dragImageObject.SetActive(false);
 
@@ -124,9 +124,9 @@ namespace Hudossay.Match3.Assets.Scripts
 
         private void Init()
         {
-            _tiles = new TileManager[GameConfig.Width, GameConfig.Height];
-            _generators = new List<TileManager>(GameConfig.Width);
-            _diagonalTiles = new List<TileManager>();
+            _tiles = new Tile[GameConfig.Width, GameConfig.Height];
+            _generators = new List<Tile>(GameConfig.Width);
+            _diagonalTiles = new List<Tile>();
             _matchBuffer = new(7);
             _ExplodeBuffer = new();
 
@@ -147,7 +147,7 @@ namespace Hudossay.Match3.Assets.Scripts
                         };
 
                         var tileObject = Instantiate(prefab, _tilesParent);
-                        var tileManager = tileObject.GetComponent<TileManager>();
+                        var tileManager = tileObject.GetComponent<Tile>();
                         _tiles[x, y] = tileManager;
 
                         var rectTroansform = tileObject.GetComponent<RectTransform>();
