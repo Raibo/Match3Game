@@ -1,12 +1,15 @@
 using Hudossay.AttributeEvents.Assets.Runtime;
 using Hudossay.AttributeEvents.Assets.Runtime.Attributes;
+using Hudossay.Match3.Assets.Scripts.Extensions;
+using Hudossay.Match3.Assets.Scripts.ScriptableObjects;
+using Hudossay.Match3.Assets.Scripts.SupportStructures;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-namespace Hudossay.Match3.Assets.Scripts
+namespace Hudossay.Match3.Assets.Scripts.MonoBehaviours
 {
     [RequireComponent(typeof(TokenPool))]
     [RequireComponent(typeof(EventLinker))]
@@ -21,9 +24,10 @@ namespace Hudossay.Match3.Assets.Scripts
         [SerializeField] private TokenPool _tokenPool;
         [SerializeField] private EventLinker _eventLinker;
 
+        [Space(15)]
+        [SerializeField] private GameObject _dragImageObject;
         [SerializeField] private Transform _dragImageTransform;
         [SerializeField] private Image _dragImageImage;
-        [SerializeField] private GameObject _dragImageObject;
 
         private Tile[,] _tiles;
         private List<Tile> _generators;

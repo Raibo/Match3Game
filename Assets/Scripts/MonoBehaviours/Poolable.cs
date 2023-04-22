@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Hudossay.Match3.Assets.Scripts
+namespace Hudossay.Match3.Assets.Scripts.MonoBehaviours
 {
     public class Poolable : MonoBehaviour
     {

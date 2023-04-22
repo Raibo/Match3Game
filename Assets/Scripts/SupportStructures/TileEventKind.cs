@@ -1,4 +1,4 @@
-﻿namespace Hudossay.Match3.Assets.Scripts
+﻿namespace Hudossay.Match3.Assets.Scripts.SupportStructures
 {
     public enum TileEventKind
     {

@@ -1,7 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using Hudossay.Match3.Assets.Scripts.Extensions;
+using Hudossay.Match3.Assets.Scripts.MonoBehaviours;
+using Hudossay.Match3.Assets.Scripts.ScriptableObjects;
+using System.Collections.Generic;
 using UnityEngine;
 
-namespace Hudossay.Match3.Assets.Scripts
+namespace Hudossay.Match3.Assets.Scripts.SupportStructures
 {
     public struct MatchingCross
     {

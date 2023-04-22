@@ -1,7 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using Hudossay.Match3.Assets.Scripts.SupportStructures;
+using System.Collections.Generic;
 using UnityEngine;
 
-namespace Hudossay.Match3.Assets.Scripts
+namespace Hudossay.Match3.Assets.Scripts.ScriptableObjects
 {
     [CreateAssetMenu(fileName = nameof(GameConfig), menuName = "Scriptable Objects/" + nameof(GameConfig))]
     public class GameConfig : ScriptableObject

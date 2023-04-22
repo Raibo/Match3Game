@@ -2,7 +2,7 @@
 using System.Buffers;
 using System.Collections.Generic;
 
-namespace Hudossay.Match3.Assets.Scripts
+namespace Hudossay.Match3.Assets.Scripts.Extensions
 {
     public static class CollectionsExtensions
     {

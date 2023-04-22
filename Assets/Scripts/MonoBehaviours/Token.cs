@@ -1,8 +1,9 @@
-﻿using System.Threading.Tasks;
+﻿using Hudossay.Match3.Assets.Scripts.ScriptableObjects;
+using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Hudossay.Match3.Assets.Scripts
+namespace Hudossay.Match3.Assets.Scripts.MonoBehaviours
 {
     public class Token : MonoBehaviour
     {
