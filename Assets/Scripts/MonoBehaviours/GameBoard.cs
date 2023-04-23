@@ -1,5 +1,6 @@
 using Hudossay.AttributeEvents.Assets.Runtime;
 using Hudossay.AttributeEvents.Assets.Runtime.Attributes;
+using Hudossay.Match3.Assets.Scripts.EventLabelEnums;
 using Hudossay.Match3.Assets.Scripts.Extensions;
 using Hudossay.Match3.Assets.Scripts.ScriptableObjects;
 using Hudossay.Match3.Assets.Scripts.SupportStructures;
@@ -36,7 +37,7 @@ namespace Hudossay.Match3.Assets.Scripts.MonoBehaviours
         private HashSet<Tile> _ExplodeBuffer;
 
         private Tile _selectedTile;
-        private bool _triggeredPull;
+        private bool _isPullAlreadyTriggered;
 
 
         private void Start()
@@ -46,13 +47,14 @@ namespace Hudossay.Match3.Assets.Scripts.MonoBehaviours
         }
 
 
-        private void Update()
+        [ResponseGlobal(InputEventKind.StartGameRequested)]
+        public void StartGame()
         {
-            if (Input.GetKeyDown(KeyCode.Space) && !_triggeredPull)
-            {
-                _triggeredPull = true;
-                TriggerTilesPull();
-            }
+            if (_isPullAlreadyTriggered)
+                return;
+
+            _isPullAlreadyTriggered = true;
+            TriggerTilesPull();
         }
 
 

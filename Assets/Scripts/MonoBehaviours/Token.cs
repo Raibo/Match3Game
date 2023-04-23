@@ -1,4 +1,8 @@
-﻿using Hudossay.Match3.Assets.Scripts.ScriptableObjects;
+﻿using Hudossay.AttributeEvents.Assets.Runtime;
+using Hudossay.AttributeEvents.Assets.Runtime.Attributes;
+using Hudossay.AttributeEvents.Assets.Runtime.GameEvents;
+using Hudossay.Match3.Assets.Scripts.EventLabelEnums;
+using Hudossay.Match3.Assets.Scripts.ScriptableObjects;
 using System;
 using System.Threading.Tasks;
 using UnityEngine;
@@ -6,14 +10,18 @@ using UnityEngine.UI;
 
 namespace Hudossay.Match3.Assets.Scripts.MonoBehaviours
 {
+    [RequireComponent(typeof(Animator))]
+    [RequireComponent(typeof(Image))]
+    [RequireComponent (typeof(EventLinker))]
     public class Token : MonoBehaviour
     {
         public TokenDefinition TokenDefinition;
         public RectTransform RectTransform;
         public Animator Animator;
-        public Poolable Poolable;
 
         public Task DestinationReach => _taskSource?.Task ?? Task.CompletedTask;
+
+        [EventLocal(TokenEventKind.DisposeRequested)] public GameEvent DisposeRequested;
 
         [SerializeField] private Image _image;
 
@@ -57,7 +65,7 @@ namespace Hudossay.Match3.Assets.Scripts.MonoBehaviours
             await Task.Delay(TimeSpan.FromSeconds(TokenDefinition.DeathDelaySeconds));
 
             Animator.SetTrigger(TokenDefinition.ResetAnimationTrigger);
-            Poolable.Return();
+            DisposeRequested.Raise();
         }
 
 
@@ -87,7 +95,6 @@ namespace Hudossay.Match3.Assets.Scripts.MonoBehaviours
         {
             _image = GetComponent<Image>();
             RectTransform = GetComponent<RectTransform>();
-            Poolable = GetComponent<Poolable>();
         }
     }
 }

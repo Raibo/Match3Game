@@ -1,9 +1,9 @@
 ﻿using Hudossay.AttributeEvents.Assets.Runtime;
 using Hudossay.AttributeEvents.Assets.Runtime.Attributes;
 using Hudossay.AttributeEvents.Assets.Runtime.GameEvents;
+using Hudossay.Match3.Assets.Scripts.EventLabelEnums;
 using Hudossay.Match3.Assets.Scripts.Extensions;
 using Hudossay.Match3.Assets.Scripts.ScriptableObjects;
-using Hudossay.Match3.Assets.Scripts.SupportStructures;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -13,6 +13,7 @@ using UnityEngine.UI;
 
 namespace Hudossay.Match3.Assets.Scripts.MonoBehaviours
 {
+    [RequireComponent(typeof(Image))]
     [RequireComponent(typeof(EventLinker))]
     public class Tile : MonoBehaviour, IPointerClickHandler, IBeginDragHandler, IEndDragHandler, IDragHandler, IPointerEnterHandler,
         IPointerExitHandler

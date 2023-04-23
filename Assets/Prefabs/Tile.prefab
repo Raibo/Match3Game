@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 502437906481759368}
   - component: {fileID: 502437906481759369}
   - component: {fileID: -1583048331587169397}
+  - component: {fileID: 6221795850366493803}
   m_Layer: 5
   m_Name: Tile
   m_TagString: Untagged
@@ -89,12 +90,28 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a11e3f348cee8d746bd7a452cfebaab9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  RectTransform: {fileID: 502437906481759370}
   Token: {fileID: 0}
   Position: {x: 0, y: 0}
-  RectTransform: {fileID: 502437906481759370}
   IsGenerator: 0
   IsBlocked: 0
   CanAcceptDiagonal: 0
+  IsSettled: 0
   BackgroundEven: {fileID: 21300000, guid: 01af46038be2e864abddf2a8b0055d84, type: 3}
   BackgroundOdd: {fileID: 21300000, guid: aa82cdc3a816a4f4e8bf6766e073cb6a, type: 3}
   _image: {fileID: 502437906481759369}
+--- !u!114 &6221795850366493803
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 502437906481759371}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a99c9d5cc8c5e334a84f8ec37ed67ccf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  BroadcastedEventLinks: []
+  ListenedEventLinks: []
+  Subscriptions: []
