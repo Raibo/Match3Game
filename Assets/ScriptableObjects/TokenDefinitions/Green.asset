@@ -13,9 +13,8 @@ MonoBehaviour:
   m_Name: Green
   m_EditorClassIdentifier: 
   Sprite: {fileID: 21300000, guid: 16b20121b05c3324495dfd3896c5d6b4, type: 3}
+  ExplosionPattern: {fileID: 0}
+  AnimatorController: {fileID: 9100000, guid: fc0d2b34af0e60644a853b449322937d, type: 2}
+  DeathDelaySeconds: 0.3
   MatchingGroups:
   - {fileID: 11400000, guid: 918f30ac71751dc499831be6f206eeb2, type: 2}
-  ExplosionPattern: {fileID: 0}
-  DeathAnimationTrigger: Pop
-  ResetAnimationTrigger: Reset
-  DeathDelaySeconds: 0.3

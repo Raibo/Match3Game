@@ -13,6 +13,9 @@ MonoBehaviour:
   m_Name: Bomb
   m_EditorClassIdentifier: 
   Sprite: {fileID: 21300000, guid: 0a05731874dc361499ad7a72b57eda40, type: 3}
+  ExplosionPattern: {fileID: 11400000, guid: 78483dc270efa1e4aa80d704a47cd14a, type: 2}
+  AnimatorController: {fileID: 22100000, guid: 31001c1d8d5a93d458007deae9c43948, type: 2}
+  DeathDelaySeconds: 0.3
   MatchingGroups:
   - {fileID: 11400000, guid: 6d9fabc440fd0e4458980d42092696bd, type: 2}
   - {fileID: 11400000, guid: 918f30ac71751dc499831be6f206eeb2, type: 2}
@@ -20,7 +23,3 @@ MonoBehaviour:
   - {fileID: 11400000, guid: ba1a038f830815f4fb11955550e8cd01, type: 2}
   - {fileID: 11400000, guid: b096a5cb2d28a3449975e287afa242f4, type: 2}
   - {fileID: 11400000, guid: 2be76d9e36b533d4d89d17952305b46b, type: 2}
-  ExplosionPattern: {fileID: 11400000, guid: 78483dc270efa1e4aa80d704a47cd14a, type: 2}
-  DeathAnimationTrigger: Explode
-  ResetAnimationTrigger: Reset
-  DeathDelaySeconds: 0.3

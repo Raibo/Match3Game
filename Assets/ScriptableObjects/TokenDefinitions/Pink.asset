@@ -13,9 +13,8 @@ MonoBehaviour:
   m_Name: Pink
   m_EditorClassIdentifier: 
   Sprite: {fileID: 21300000, guid: 74e8b3592fa6a004da60e1e93d958212, type: 3}
+  ExplosionPattern: {fileID: 0}
+  AnimatorController: {fileID: 9100000, guid: fc0d2b34af0e60644a853b449322937d, type: 2}
+  DeathDelaySeconds: 0.3
   MatchingGroups:
   - {fileID: 11400000, guid: 5c60f8026e199b147a2d31b511471fb3, type: 2}
-  ExplosionPattern: {fileID: 0}
-  DeathAnimationTrigger: Pop
-  ResetAnimationTrigger: Reset
-  DeathDelaySeconds: 0.3

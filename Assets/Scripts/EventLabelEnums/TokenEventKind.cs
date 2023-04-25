@@ -2,6 +2,8 @@
 {
     public enum TokenEventKind
     {
-        DisposeRequested,
+        Initialized,
+        DeathStarted,
+        DeathFinished,
     }
 }

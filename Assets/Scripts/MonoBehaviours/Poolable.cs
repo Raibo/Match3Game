@@ -20,7 +20,7 @@ namespace Hudossay.Match3.Assets.Scripts.MonoBehaviours
         }
 
 
-        [ResponseLocal(TokenEventKind.DisposeRequested)]
+        [ResponseLocal(TokenEventKind.DeathFinished)]
         public void Return() =>
             Pool.Return(_tokenManager);
     }

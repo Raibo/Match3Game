@@ -12,16 +12,17 @@ namespace Hudossay.Match3.Assets.Scripts.MonoBehaviours
 {
     [RequireComponent(typeof(Animator))]
     [RequireComponent(typeof(Image))]
-    [RequireComponent (typeof(EventLinker))]
+    [RequireComponent(typeof(EventLinker))]
     public class Token : MonoBehaviour
     {
         public TokenDefinition TokenDefinition;
         public RectTransform RectTransform;
-        public Animator Animator;
 
         public Task DestinationReach => _taskSource?.Task ?? Task.CompletedTask;
 
-        [EventLocal(TokenEventKind.DisposeRequested)] public GameEvent DisposeRequested;
+        [EventLocal(TokenEventKind.Initialized)] public GameEvent<TokenDefinition> Initialized;
+        [EventLocal(TokenEventKind.DeathStarted)] public GameEvent DeathStarted;
+        [EventLocal(TokenEventKind.DeathFinished)] public GameEvent DeathFinished;
 
         [SerializeField] private Image _image;
 
@@ -44,6 +45,7 @@ namespace Hudossay.Match3.Assets.Scripts.MonoBehaviours
             _image.sprite = newDefinition.Sprite;
             TokenDefinition = newDefinition;
             _gameConfig = gameConfig;
+            Initialized.RaiseForced(newDefinition);
         }
 
 
@@ -61,11 +63,10 @@ namespace Hudossay.Match3.Assets.Scripts.MonoBehaviours
 
         public async Task Kill()
         {
-            Animator.SetTrigger(TokenDefinition.DeathAnimationTrigger);
+            DeathStarted.Raise();
             await Task.Delay(TimeSpan.FromSeconds(TokenDefinition.DeathDelaySeconds));
 
-            Animator.SetTrigger(TokenDefinition.ResetAnimationTrigger);
-            DisposeRequested.Raise();
+            DeathFinished.RaiseForced();
         }
 
 
